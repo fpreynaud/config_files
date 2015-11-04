@@ -2,6 +2,9 @@
 	email = francois.p.reynaud@gmail.com
 	name = François REYNAUD
 
+[credential "https://github.com"]
+	username = Reynington
+
 [core]
 	editor = vim
 
