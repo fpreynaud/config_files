@@ -1,0 +1,13 @@
+[user]
+	email = francois.p.reynaud@gmail.com
+	name = François REYNAUD
+
+[core]
+	editor = vim
+
+[alias]
+	logd = log --decorate=full
+	tree = log --graph --decorate --oneline --branches
+	diffl = diff HEAD^
+[push]
+	default = simple
