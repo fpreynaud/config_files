@@ -12,5 +12,6 @@
 	logd = log --decorate=full
 	tree = log --graph --decorate --oneline --branches
 	diffl = diff HEAD^
+
 [push]
 	default = simple

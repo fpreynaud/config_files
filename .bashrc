@@ -82,6 +82,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+unalias cd 2> /dev/null
 function cs
 {
 	cd "$@" && ls
@@ -147,24 +148,31 @@ export PS1="\[${white_bg}${daily_fg}\]\w${default_colors}\n\r${white_bg}${daily_
 #droits par défaut d'un fichier : rwx r-x ---
 umask 027
 
-#param $1 : name of bookmark
-#param $2 (optional) : location to bookmark. Defaults to current directory
+#synopsis: bookmark bookmark_name [target]
+#creates a shortcut to target in ~/bookmarks. default value for target is $PWD 
 function bookmark
 {
 	if [ $# -eq 1 ]
 	then
-		eval $1="$PWD"
-		echo "export $1=$PWD/" >> ~/.bash_bookmarks
+		ln -sf $PWD ~/bookmarks/$1
+		#eval $1="$PWD"
+		#echo "export $1=$PWD/" >> ~/.bash_bookmarks
 	fi
 
 	if [ $# -eq 2 ]
 	then
-		if [ -d $2 ]
-		then
-			eval $1=$2
-			echo "export $1=$2" >> ~/.bash_bookmarks
-		fi
+		ln -sf $2 ~/bookmarks/$1
+		#if [ -d $2 ]
+		#then
+			#eval $1=$2
+			#echo "export $1=$2" >> ~/.bash_bookmarks
+		#fi
 	fi
+}
+
+function gt
+{
+	cd ~/bookmarks/$1
 }
 
 . ~/.bash_bookmarks
