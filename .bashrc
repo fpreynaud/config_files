@@ -177,5 +177,3 @@ function gt
 {
 	cd ~/bookmarks/$1
 }
-
-. ~/.bash_bookmarks
