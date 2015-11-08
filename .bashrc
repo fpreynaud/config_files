@@ -152,22 +152,25 @@ umask 027
 #creates a shortcut to target in ~/bookmarks. default value for target is $PWD 
 function bookmark
 {
+	getopts ":s" opt
+	case $opt in
+		s)ls -l ~/.bookmarks|cut -f 11- -d " ";
+		OPTIND=1;
+		shift;;
+		\?)echo Invalid option -$OPTARG;;
+		:)return 1;;
+	esac
+
 	if [ $# -eq 1 ]
 	then
 		ln -sf $PWD ~/bookmarks/$1
-		#eval $1="$PWD"
-		#echo "export $1=$PWD/" >> ~/.bash_bookmarks
 	fi
 
 	if [ $# -eq 2 ]
 	then
 		ln -sf $2 ~/bookmarks/$1
-		#if [ -d $2 ]
-		#then
-			#eval $1=$2
-			#echo "export $1=$2" >> ~/.bash_bookmarks
-		#fi
 	fi
+	OPTIND=1
 }
 
 function gt
