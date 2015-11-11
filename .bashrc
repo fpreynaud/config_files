@@ -43,14 +43,16 @@ esac
 # should be on the output of commands, not on the prompt
 #force_color_prompt=yes
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+if [ -n "$force_color_prompt" ]
+then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null 
+	then
 	# We have color support; assume it's compliant with Ecma-48
 	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
 	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+		color_prompt=yes
     else
-	color_prompt=
+		color_prompt=
     fi
 fi
 
@@ -82,14 +84,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-unalias cd 2> /dev/null
-export CDPATH=$CDPATH:~/.bookmarks
-function cs
-{
-	cd -P "$@" && ls
-}
-
-alias cd=cs
 
 # some more ls aliases
 alias ll='ls -alF'
@@ -117,40 +111,52 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-dircolors ~/ls_couleurs 2>/dev/null >/dev/null
-eval `dircolors ~/.ls_couleurs`
-
-#divers "raccourcis"
-export PATH=$PATH:~/bin:./:~/Téléchargements/android-sdk-linux/platform-tools/:~/Téléchargements/android-sdk-linux/tools/
-export trash=~/.local/share/Trash/files
-
-#Couleur du prompt shell. Varie selon le jour du mois
-jour=`date +%d`
-if [ $jour == "08" ]
-then
-	jour=8
-elif [ $jour == "09" ]
-then
-	jour=9
-fi
-
-day=$(($jour % 6 + 30))
-
-if [ $day -eq 30 ]
-then
-	day=36
-fi
-
-white_bg="\e[47m"
-daily_fg="\e[${day}m"
-default_colors="\[\e[0m\]"
-export PS1="\[${white_bg}${daily_fg}\]\w${default_colors}\n\r${white_bg}${daily_fg}\u@\h(\t)\$${default_colors}\n"
+# My part ######################################################################################################
 
 #droits par défaut d'un fichier : rwx r-x ---
 umask 027
 
-#synopsis: bookmark bookmark_name [target]
-#creates a shortcut to target in ~/bookmarks. default value for target is $PWD 
+#associate names with console codes
+black=30
+bgblack=40
+red=31
+bgred=41
+green=32
+bggreen=42
+brown=33
+bgbrown=43
+blue=34
+bgblue=44
+magenta=35
+bgmagenta=45
+cyan=36
+bgcyan=46
+white=37
+bgwhite=47
+bold=1
+nobold=21
+defaultDispAtt=0
+
+# exports
+export PATH=$PATH:~/bin:./:~/Téléchargements/android-sdk-linux/platform-tools/:~/Téléchargements/android-sdk-linux/tools/
+export HISTTIMEFORMAT='%d/%m/%y %H:%M '
+export CDPATH=$CDPATH:~/.bookmarks
+export PS1="\[\e[${bgwhite};${blue};${bold}m\]\w\[\e[${defaultDispAtt}m\]\n\r\[\e[${bgwhite};${blue};${bold}m\]\u@\h(\t)\$\[\e[${defaultDispAtt}m\]\n"
+export trash=~/.local/share/Trash/files
+
+# functions
+unalias cd 2> /dev/null
+# synopsis: cs [dir]
+# go into dir and list its contents immediatly
+function cs
+{
+	cd -P "$@" && ls
+}
+alias cd=cs
+
+# synopsis: bookmark bookmark_name [target]
+# creates a symbolic link to target in ~/.bookmarks. The default value for
+# target is $PWD 
 function bookmark
 {
 	getopts ":s" opt
@@ -169,22 +175,18 @@ function bookmark
 	then
 		ln -f -s `readlink -f $2` ~/.bookmarks/$1
 	fi
+
 	OPTIND=1
 }
 
-Black=30
-Red=31
-Green=32
-Brown=33
-Blue=34
-Magenta=35
-Cyan=36
-White=37
-Bold=1
-defaultDispAtt=0
-
+# synopsis: display display_attribute[(;display_attribute)...] text
+# print text with the given display attributes
 function display
 {
 	echo -e "\033[${1}m$2"
 	echo -ne "\033[${defaultDispAtt}m"
 }
+
+# define custom colors for ls
+dircolors ~/ls_couleurs 2>/dev/null >/dev/null
+eval `dircolors ~/.ls_couleurs`
