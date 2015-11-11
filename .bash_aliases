@@ -23,6 +23,8 @@ alias jobs='jobs -l'
 
 alias lx='ls -X'
 
+alias makecoffee='for i in `ls *.pdf`; do repname=`echo $i | cut -f1 -d"."`; mkdir -p $repname/fiche; mv $i $repname; cp ~/.bookmarks/stage/template_fiche/template_fiche.tex $repname/fiche/fiche_${repname}.tex;done'
+
 alias pedago='ssh -i ~/.ssh/pedago francois.reynaud@pedago.ensiie.fr'
 alias preludestart='sudo service prelude-manager start; sudo service prelude-lml start; sudo service prelude-correlator start; sudo prewikka-httpd &'
 alias preludestop='sudo service prelude-manager stop; sudo service prelude-lml stop; sudo service prelude-correlator stop; sudo pkill prewikka'

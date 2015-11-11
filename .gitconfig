@@ -12,6 +12,7 @@
 	logd = log --decorate=full
 	tree = log --graph --decorate --oneline --branches
 	diffl = diff HEAD^
+	index = ls-files
 
 [push]
 	default = simple

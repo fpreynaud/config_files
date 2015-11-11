@@ -83,9 +83,10 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 unalias cd 2> /dev/null
+export CDPATH=$CDPATH:~/.bookmarks
 function cs
 {
-	cd "$@" && ls
+	cd -P "$@" && ls
 }
 
 alias cd=cs
@@ -157,23 +158,33 @@ function bookmark
 		s)ls -l ~/.bookmarks|cut -f 11- -d " ";
 		OPTIND=1;
 		shift;;
-		\?)echo Invalid option -$OPTARG;;
-		:)return 1;;
 	esac
 
 	if [ $# -eq 1 ]
 	then
-		ln -sf $PWD ~/bookmarks/$1
+		ln -f -s $PWD ~/.bookmarks/$1
 	fi
 
 	if [ $# -eq 2 ]
 	then
-		ln -sf $2 ~/bookmarks/$1
+		ln -f -s `readlink -f $2` ~/.bookmarks/$1
 	fi
 	OPTIND=1
 }
 
-function gt
+Black=30
+Red=31
+Green=32
+Brown=33
+Blue=34
+Magenta=35
+Cyan=36
+White=37
+Bold=1
+defaultDispAtt=0
+
+function display
 {
-	cd ~/bookmarks/$1
+	echo -e "\033[${1}m$2"
+	echo -ne "\033[${defaultDispAtt}m"
 }

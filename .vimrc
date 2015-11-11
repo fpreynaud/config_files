@@ -21,8 +21,14 @@ inoremap JK <ESC>
 inoremap <CR>} <CR>}<ESC>O<Tab>
 
 "Normal mode mappings
+nnoremap zO zR
+nnoremap zC zM
+nnoremap zR zO
+nnoremap zM zC
 nnoremap :hg :helpgrep 
 nnoremap d; d/;<CR>
+nnoremap d, d/,<CR>
+nnoremap d" d/"<CR>
 nnoremap :x<CR> :w<CR>
 nnoremap :W<CR> :w<CR>
 nnoremap <M-Left> <C-w><Left>
