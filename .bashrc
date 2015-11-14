@@ -187,6 +187,24 @@ function display
 	echo -ne "\033[${defaultDispAtt}m"
 }
 
+function savefiche
+{
+	OPTIND=1
+	getopts ":u" opt
+	case $opt in
+		u)cp -Lu ~/fiches/* ~/documents/fiches;
+		shift;;
+	esac
+
+	if [ $# -ge 1 ]
+	then
+		echo $1
+		ln -s -f `readlink -f $1` ~/fiches
+	fi
+	OPTIND=1
+	
+}
+
 # define custom colors for ls
 dircolors ~/ls_couleurs 2>/dev/null >/dev/null
 eval `dircolors ~/.ls_couleurs`

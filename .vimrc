@@ -15,6 +15,7 @@ let mapleader = ","
 let maplocalleader = ","
 
 "Insert mode mappings
+inoremap <leader>nfv Network Function Virtualization
 inoremap <Tab><Tab> <C-N>
 inoremap jk <ESC>
 inoremap JK <ESC>
@@ -125,4 +126,8 @@ function! Maps_tex ()
 	inoremap \ _
 
 	nnoremap <C-c> :!pdflatex %<CR>
+endfunction
+
+function! Remove_eol_spaces()
+	:%s/\s\+$/
 endfunction
