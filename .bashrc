@@ -208,3 +208,4 @@ function savefiche
 # define custom colors for ls
 dircolors ~/ls_couleurs 2>/dev/null >/dev/null
 eval `dircolors ~/.ls_couleurs`
+bind -x '"\C-\M-T":terminator'

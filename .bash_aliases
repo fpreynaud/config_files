@@ -39,4 +39,6 @@ alias rmdir='rmdir --ignore-fail-on-non-empty'
 
 alias sf='echo montage des dossiers partagés; sudo mount -t vboxsf mes_documents ~/documents; sudo mount -t vboxsf mes_images ~/images && echo montage réussi'
 
+alias terminator='nohup terminator --working-directory=. 2>/dev/null >/dev/null &'
+
 alias vim='vim -n -c :loadview'

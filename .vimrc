@@ -15,6 +15,7 @@ let mapleader = ","
 let maplocalleader = ","
 
 "Insert mode mappings
+inoremap <leader>sdn Software-Defined Networking
 inoremap <leader>nfv Network Function Virtualization
 inoremap <Tab><Tab> <C-N>
 inoremap jk <ESC>
