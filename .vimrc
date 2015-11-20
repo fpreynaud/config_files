@@ -27,7 +27,7 @@ nnoremap zO zR
 nnoremap zC zM
 nnoremap zR zO
 nnoremap zM zC
-nnoremap :hg :helpgrep 
+nnoremap :hg :helpgrep
 nnoremap d; d/;<CR>
 nnoremap d, d/,<CR>
 nnoremap d" d/"<CR>
@@ -51,7 +51,7 @@ nnoremap <leader>labb :source ~/.vim/abbr.vim<CR>
 nnoremap <leader>' viw<ESC>a'<ESC>hbi'<ESC>lel
 nnoremap <leader>:: I//<ESC>j
 nnoremap <CR> i<CR><ESC>
-nnoremap :w :mkview<CR>:w
+nnoremap :w<CR> ma:%s/\s\+$//e<CR>:mkview<CR>`a:w<CR>
 nnoremap n nzz
 nnoremap à 0
 nnoremap é ~
@@ -69,16 +69,16 @@ autocmd Bufnewfile,bufread *.pde :set syn=java
 
 "C autocommands
 autocmd Bufnewfile *.c :0r ~/.vim/minC.c
-autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.c :set cindent 
+autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.c :set cindent
 autocmd FileType c :vnoremap <buffer> <localleader>c <ESC>`<i/*<ESC>`>a*/<ESC>l
 autocmd FileType c :set formatoptions=cqro
-autocmd FileType c :set tw=80 
+autocmd FileType c :set tw=80
 
 "C++ autocommands
 autocmd Bufnewfile *.cpp :0r ~/.vim/minCpp.cpp
-autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.cpp :set cindent 
+autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.cpp :set cindent
 autocmd FileType cpp :set formatoptions=cqro
-autocmd FileType cpp :set tw=80 
+autocmd FileType cpp :set tw=80
 autocmd FileType cpp :inoremap <CR>} <CR>}<ESC>O
 
 "C indent
@@ -109,10 +109,10 @@ function! Maps_tex ()
 
 	"Lists mappings
 	inoremap <leader>item \begin{itemize}<CR><Tab><CR><BS>\end{itemize}<ESC>ka
-	inoremap <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item 
-	inoremap <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item 
-	inoremap <leader>- \item 
-	inoremap <leader>p- \item[$\bullet$] 
+	inoremap <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item
+	inoremap <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item
+	inoremap <leader>- \item
+	inoremap <leader>p- \item[$\bullet$]
 
 	"Environments mappings
 	inoremap <leader>beg \begin{}<CR>\end{}<Up><Right><Right><CR><Tab><Up><Right><Right><Right>

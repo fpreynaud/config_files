@@ -26,9 +26,22 @@ alias lx='ls -X'
 #pour tout fichier .pdf dans le dossier, créer un sous-dossier du même nom, y
 #placer le pdf, y créer un dossier fiche, et placer le template de fiche dans ce
 #dernier
-alias makecoffee='for i in `ls *.pdf`; do repname=`echo $i | cut -f1 -d"."`; mkdir -p $repname/fiche; mv $i $repname; cp ~/.bookmarks/stage/template_fiche/template_fiche.tex $repname/fiche/fiche_${repname}.tex;done'
+alias makecoffee='
+OLDIFS=$IFS; 
+for i in `ls *.pdf`; 
+do 
+	IFS=;
+	repname=`echo $i | cut -f1 -d"."`; 
+	IFS=$OLDIFS; 
+	mkdir -p $repname/fiche; 
+	IFS=;
+	mv $i $repname; 
+	IFS=$OLDIFS; 
+	cp ~/.bookmarks/stage/template_fiche/template_fiche.tex $repname/fiche/fiche_${repname}.tex; 
+done'
 
 alias pedago='ssh -i ~/.ssh/pedago francois.reynaud@pedago-etu.ensiie.fr'
+alias popd='popd >/dev/null 2>/dev/null'
 alias preludestart='sudo service prelude-manager start; sudo service prelude-lml start; sudo service prelude-correlator start; sudo prewikka-httpd &'
 alias preludestop='sudo service prelude-manager stop; sudo service prelude-lml stop; sudo service prelude-correlator stop; sudo pkill prewikka'
 alias pwof='sudo shutdown -P now'

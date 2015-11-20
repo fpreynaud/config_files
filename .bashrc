@@ -145,11 +145,18 @@ export PS1="\[\e[${bgwhite};${blue};${bold}m\]\w\[\e[${defaultDispAtt}m\]\n\r\[\
 export trash=~/.local/share/Trash/files
 
 # functions
+# "Go to directory containing the file" function
+function cdirlink
+{
+	cd $(dirname `readlink -e $1`)
+}
+
 unalias cd 2> /dev/null
 # synopsis: cs [dir]
 # go into dir and list its contents immediatly
 function cs
 {
+	pushd . >/dev/null
 	cd -P "$@" && ls
 }
 alias cd=cs
@@ -159,9 +166,12 @@ alias cd=cs
 # target is $PWD 
 function bookmark
 {
-	getopts ":s" opt
+	getopts ":vs" opt
 	case $opt in
-		s)ls -l ~/.bookmarks|cut -f 11- -d " ";
+		s)ls ~/.bookmarks;
+		OPTIND=1;
+		shift;;
+		v)ls -l ~/.bookmarks;
 		OPTIND=1;
 		shift;;
 	esac
@@ -190,10 +200,14 @@ function display
 function savefiche
 {
 	OPTIND=1
-	getopts ":u" opt
+	getopts ":vus" opt
 	case $opt in
 		u)cp -Lu ~/fiches/* ~/documents/fiches;
 		shift;;
+		s)ls ~/fiches;
+		return;;
+		v)ls -l ~/fiches;
+		return;;
 	esac
 
 	if [ $# -ge 1 ]
