@@ -45,7 +45,7 @@ esac
 
 if [ -n "$force_color_prompt" ]
 then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null 
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null
 	then
 	# We have color support; assume it's compliant with Ecma-48
 	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
@@ -163,7 +163,7 @@ alias cd=cs
 
 # synopsis: bookmark bookmark_name [target]
 # creates a symbolic link to target in ~/.bookmarks. The default value for
-# target is $PWD 
+# target is $PWD
 function bookmark
 {
 	getopts ":vs" opt
@@ -216,10 +216,12 @@ function savefiche
 		ln -s -f `readlink -f $1` ~/fiches
 	fi
 	OPTIND=1
-	
+
 }
 
 # define custom colors for ls
 dircolors ~/ls_couleurs 2>/dev/null >/dev/null
 eval `dircolors ~/.ls_couleurs`
 bind -x '"\C-\M-T":terminator'
+
+fortune

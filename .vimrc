@@ -28,9 +28,9 @@ nnoremap zC zM
 nnoremap zR zO
 nnoremap zM zC
 nnoremap :hg :helpgrep
-nnoremap d; d/;<CR>
-nnoremap d, d/,<CR>
-nnoremap d" d/"<CR>
+nnoremap d; dt;<CR>
+nnoremap d, dt,<CR>
+nnoremap d" dt"<CR>
 nnoremap :x<CR> :w<CR>
 nnoremap :W<CR> :w<CR>
 nnoremap <M-Left> <C-w><Left>
@@ -68,22 +68,31 @@ autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.tex :call Maps_tex()
 autocmd Bufnewfile,bufread *.pde :set syn=java
 
 "C autocommands
+"Write minimal C code
 autocmd Bufnewfile *.c :0r ~/.vim/minC.c
+"Set cindent
 autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.c :set cindent
-autocmd FileType c :vnoremap <buffer> <localleader>c <ESC>`<i/*<ESC>`>a*/<ESC>l
+"Autowrap comments using textwidth,
+"Allow formating of comments with 'gq',
+"Insert comment leader after hitting <Enter> in Insert mode or 'o' or 'O' in Normal mode
 autocmd FileType c :set formatoptions=cqro
-autocmd FileType c :set tw=80
+"Color Column 80
+autocmd FileType c :set cc=80
 
 "C++ autocommands
+"Write minimal C++ code
 autocmd Bufnewfile *.cpp :0r ~/.vim/minCpp.cpp
+"Set cindent
 autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.cpp :set cindent
+"Autowrap comments using textwidth,
+"Allow formating of comments with 'gq',
+"Insert comment leader after hitting <Enter> in Insert mode or 'o' or 'O' in Normal mode
 autocmd FileType cpp :set formatoptions=cqro
-autocmd FileType cpp :set tw=80
-autocmd FileType cpp :inoremap <CR>} <CR>}<ESC>O
+"Color Column 80
+autocmd FileType cpp :set cc=80
 
 "C indent
 set cinoptions=""
-
 
 function! Maps_tex ()
 	if &ft != 'tex' && &ft != 'plaintex'
