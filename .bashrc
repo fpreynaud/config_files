@@ -146,7 +146,7 @@ export trash=~/.local/share/Trash/files
 
 # functions
 # "Go to directory containing the file" function
-function cdirlink
+function ocf
 {
 	cd $(dirname `readlink -e $1`)
 }
@@ -200,7 +200,7 @@ function display
 function savefiche
 {
 	OPTIND=1
-	getopts ":vus" opt
+	getopts ":curvs" opt
 	case $opt in
 		u)cp -Lu ~/fiches/* ~/documents/fiches;
 		shift;;
@@ -208,6 +208,8 @@ function savefiche
 		return;;
 		v)ls -l ~/fiches;
 		return;;
+		r)for i in $(ls); do if [ -d $i ] ; then cd $i; if [ $i != "fiche" ] ; then savefiche -r ; else savefiche fiche_*.pdf; fi; cd ..; fi; done; return;;
+		c)del -f ~/fiches/{fiche_\*.pdf,nohup.out}; return;;
 	esac
 
 	if [ $# -ge 1 ]

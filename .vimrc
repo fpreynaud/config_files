@@ -20,9 +20,10 @@ inoremap <leader>nfv Network Function Virtualization
 inoremap <Tab><Tab> <C-N>
 inoremap jk <ESC>
 inoremap JK <ESC>
-inoremap <CR>} <CR>}<ESC>O<Tab>
+inoremap <CR>} <CR>}<ESC>O
 
 "Normal mode mappings
+nnoremap cc d^d$
 nnoremap zO zR
 nnoremap zC zM
 nnoremap zR zO
@@ -120,7 +121,7 @@ function! Maps_tex ()
 	inoremap <leader>item \begin{itemize}<CR><Tab><CR><BS>\end{itemize}<ESC>ka
 	inoremap <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item
 	inoremap <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item
-	inoremap <leader>- \item
+	inoremap <leader>- \item 
 	inoremap <leader>p- \item[$\bullet$]
 
 	"Environments mappings

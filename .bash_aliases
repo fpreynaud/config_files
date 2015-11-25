@@ -27,17 +27,15 @@ alias lx='ls -X'
 #placer le pdf, y créer un dossier fiche, et placer le template de fiche dans ce
 #dernier
 alias makecoffee='
-OLDIFS=$IFS; 
-for i in `ls *.pdf`; 
-do 
+OLDIFS=$IFS;
+for i in `ls *.pdf`;
+do
 	IFS=;
-	repname=`echo $i | cut -f1 -d"."`; 
-	IFS=$OLDIFS; 
-	mkdir -p $repname/fiche; 
-	IFS=;
-	mv $i $repname; 
-	IFS=$OLDIFS; 
-	cp ~/.bookmarks/stage/template_fiche/template_fiche.tex $repname/fiche/fiche_${repname}.tex; 
+	repname=`echo $i | cut -f1 -d"."`;
+	mkdir -p $repname/fiche;
+	mv $i $repname;
+	cp ~/.bookmarks/stage/template_fiche/template_fiche.tex $repname/fiche/fiche_${repname}.tex;
+	IFS=$OLDIFS;
 done'
 
 alias pedago='ssh -i ~/.ssh/pedago francois.reynaud@pedago-etu.ensiie.fr'
@@ -50,7 +48,8 @@ alias pyth='python3.4'
 alias rm='~/bin/dump 2>/dev/null'
 alias rmdir='rmdir --ignore-fail-on-non-empty'
 
-alias sf='echo montage des dossiers partagés; sudo mount -t vboxsf mes_documents ~/documents; sudo mount -t vboxsf mes_images ~/images && echo montage réussi'
+#alias sf='echo montage des dossiers partagés; sudo mount -t vboxsf mes_documents ~/documents; sudo mount -t vboxsf mes_images ~/images && echo montage réussi'
+alias sf='echo montage des dossiers partagés; ln -s /media/sf_mes_documents ~/documents && echo montage réussi'
 
 alias terminator='nohup terminator --working-directory=. 2>/dev/null >/dev/null &'
 
