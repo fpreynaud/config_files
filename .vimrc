@@ -29,9 +29,9 @@ nnoremap zC zM
 nnoremap zR zO
 nnoremap zM zC
 nnoremap :hg :helpgrep
-nnoremap d; dt;<CR>
-nnoremap d, dt,<CR>
-nnoremap d" dt"<CR>
+nnoremap d; dt;
+nnoremap d, dt,
+nnoremap d" dt"
 nnoremap :x<CR> :w<CR>
 nnoremap :W<CR> :w<CR>
 nnoremap <M-Left> <C-w><Left>
@@ -91,6 +91,8 @@ autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.cpp :set cindent
 autocmd FileType cpp :set formatoptions=cqro
 "Color Column 80
 autocmd FileType cpp :set cc=80
+"set foldmethod to 'syntax'
+autocmd FileType cpp :set foldmethod=syntax
 
 "C indent
 set cinoptions=""
@@ -121,7 +123,7 @@ function! Maps_tex ()
 	inoremap <leader>item \begin{itemize}<CR><Tab><CR><BS>\end{itemize}<ESC>ka
 	inoremap <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item
 	inoremap <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item
-	inoremap <leader>- \item 
+	inoremap <leader>- \item
 	inoremap <leader>p- \item[$\bullet$]
 
 	"Environments mappings
@@ -136,7 +138,7 @@ function! Maps_tex ()
 	inoremap _ \
 	inoremap \ _
 
-	nnoremap <C-c> :!pdflatex %<CR>
+	nnoremap <C-C> :!make<CR>
 endfunction
 
 function! Remove_eol_spaces()

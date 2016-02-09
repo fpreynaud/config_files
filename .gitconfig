@@ -3,7 +3,7 @@
 	name = François REYNAUD
 
 [credential "https://github.com"]
-	username = Reynington
+	username = fpreynaud
 
 [core]
 	editor = vim

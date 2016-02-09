@@ -1,4 +1,6 @@
 #!/bin/bash
+alias apt-get='sudo apt-get'
+
 alias banshee='ssh fpr163@banshee.cs.uow.edu.au'
 
 alias cdd='cd $OLDPWD'
@@ -7,10 +9,11 @@ alias clntex='/bin/rm *.out *.aux *.log'
 alias cq='cd ..'
 
 alias del='/bin/rm'
+alias du='du -h'
 
 alias evince='nohup evince'
 
-alias firefox='nohup firefox & > /dev/null 2> /dev/null'
+alias firefox='nohup firefox  > /dev/null 2> /dev/null'
 alias ftpbanshee='sftp fpr163@banshee.cs.uow.edu.au'
 alias ftpedago='sftp -i ~/.ssh/pedago francois.reynaud@pedago-etu.ensiie.fr'
 
