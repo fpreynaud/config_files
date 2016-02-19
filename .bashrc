@@ -138,14 +138,34 @@ nobold=21
 defaultDispAtt=0
 
 # exports
-export PATH=$PATH:~/bin:./:~/Téléchargements/android-sdk-linux/platform-tools/:~/Téléchargements/android-sdk-linux/tools/
-export HISTTIMEFORMAT='%d/%m/%y %H:%M '
 export CDPATH=$CDPATH:~/.bookmarks
+export DEFAULTPATH=/usr/local/bin:/usr/bin:/bin
+export HISTTIMEFORMAT='%d/%m/%y %H:%M '
+export MULVALROOT=/home/francois/cybercaptor/mulval
+export PATH=$DEFAULTPATH:./:$MULVALROOT/XSB/bin:$MULVALROOT/bin:$MULVALROOT/utils
+export PDF_READER='apvlv'
 export PS1="\[\e[${bgwhite};${blue};${bold}m\]\w\[\e[${defaultDispAtt}m\]\n\r\[\e[${bgwhite};${blue};${bold}m\]\u@\h(\t)\$\[\e[${defaultDispAtt}m\]\n"
 export trash=~/.local/share/Trash/files
 
+# colors for less and man
+export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
+export LESS_TERMCAP_md=$(tput bold; tput setaf 8)
+export LESS_TERMCAP_me=$(tput sgr0)
+export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4)
+export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
+export LESS_TERMCAP_us=$(tput smul; tput setaf 6)
+export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
+export LESS_TERMCAP_mr=$(tput rev)
+export LESS_TERMCAP_mh=$(tput dim)
+export LESS_TERMCAP_ZN=$(tput ssubm)
+export LESS_TERMCAP_ZV=$(tput rsubm)
+export LESS_TERMCAP_ZO=$(tput ssupm)
+export LESS_TERMCAP_ZW=$(tput rsupm)
+export LESS="--RAW-CONTROL-CHARS"
+
 # functions
-# "Go to directory containing the file" function
+#
+# "Go to directory containing the file" function (ocf = 'Open Containing Folder')
 function ocf
 {
 	cd $(dirname `readlink -e $1`)
@@ -222,8 +242,5 @@ function savefiche
 }
 
 # define custom colors for ls
-dircolors ~/ls_couleurs 2>/dev/null >/dev/null
-eval `dircolors ~/.ls_couleurs`
-bind -x '"\C-\M-T":terminator'
+eval `dircolors ~/.dircolors`
 
-fortune

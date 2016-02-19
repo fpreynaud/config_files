@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for i in `ls -d * .*`; do
+	case $i in
+		.|..|$0|.git);;
+		*) cp -Rui $i ~;;
+	esac
+done
