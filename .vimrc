@@ -102,6 +102,8 @@ autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.cpp :set cindent
 autocmd FileType cpp :set formatoptions=cqro
 "Color Column 80
 autocmd FileType cpp :set cc=80
+"set foldmethod to 'syntax'
+autocmd FileType cpp :set foldmethod=syntax
 
 "C indent
 set cinoptions=""
@@ -151,5 +153,5 @@ function! Maps_tex ()
 	inoremap _ \
 	inoremap \ _
 
-	nnoremap <C-c> :!pdflatex %<CR>
+	nnoremap <C-C> :!make<CR>
 endfunction

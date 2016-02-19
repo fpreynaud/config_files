@@ -1,5 +1,4 @@
 #!/bin/bash
-
 alias ag='sudo apt-get'
 
 alias cdd='cd $OLDPWD'
@@ -8,6 +7,7 @@ alias clntex='/bin/rm *.out *.aux *.log'
 alias cq='cd ..'
 
 alias del='/bin/rm'
+alias du='du -h'
 
 alias ebrc='vim ~/.zshrc'
 alias eba='vim  ~/.bash_aliases'

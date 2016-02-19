@@ -186,7 +186,7 @@ alias cd=cs
 # target is $PWD
 function bookmark
 {
-	getopts ":vs" opt
+	getopts ":vsh" opt
 	case $opt in
 		s)ls ~/.bookmarks;
 		OPTIND=1;
@@ -194,6 +194,16 @@ function bookmark
 		v)ls -l ~/.bookmarks;
 		OPTIND=1;
 		shift;;
+		h)echo -e "Synopsis: bookmark bookmark_name [target]
+
+creates a symbolic link named bookmark_name to target in ~/.bookmarks. The default value for target is \$PWD
+
+Options:
+-s show bookmarks
+-v show bookmarks in long format
+-h display this help";
+	OPTIND=1
+		return;;
 	esac
 
 	if [ $# -eq 1 ]
