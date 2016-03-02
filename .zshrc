@@ -21,6 +21,8 @@ white=37
 bgwhite=47
 bold=1
 nobold=21
+underline=4
+nounderline=24
 defaultDispAtt=0
 
 # exports
@@ -77,27 +79,37 @@ alias cd=cs
 # target is $PWD
 function bookmark
 {
-	getopts ":vs" opt
-	case $opt in
-		s)ls ~/.bookmarks;
-		OPTIND=1;
-		shift;;
-		v)ls -l ~/.bookmarks;
-		OPTIND=1;
-		shift;;
+	target="\033[${cyan};${underline}mtarget\033[${defaultDispAtt}m"
+	bookmark_name="\033[${cyan};${underline}mbookmark_name\033[${defaultDispAtt}m"
+	for option
+	do
+		case "$option" in
+			-l|--list)
+				ls ~/.bookmarks;
+				return;;
+			-v|--long-listing)
+				ls -l ~/.bookmarks;
+				return;;
+			-h|--help)
+				echo -e "\033[${bold}mSynopsis:\033[${defaultDispAtt}m bookmark [options] [$bookmark_name] [$target]";
+				echo -e "\033[${bold}mDescription:\033[${defaultDispAtt}m";
+				echo -e \
+"    Creates a symbolic link to $target named $bookmark_name in ~/.bookmarks. If no argument is supplied, it is equivalent to bookmark -l.
+    If only $bookmark_name is supplied, $target defaults to the current directory.";
+				echo -e "\033[${bold}m
+Options
+    -l\033[${defaultDispAtt}m   Display list of bookmarks
+    \033[${bold}m-v\033[${defaultDispAtt}m   Display list of bookmarks in long-listing format
+    \033[${bold}m-h\033[${defaultDispAtt}m   Display this help";
+				return;;
+		esac
+	done
+
+	case "$#" in
+		"0") ls ~/.bookmarks;;
+		"1") ln -f -s $PWD ~/.bookmarks/$1;;
+		"2") ln -f -s `readlink -f $2` ~/.bookmarks/$1;;
 	esac
-
-	if [ $# -eq 1 ]
-	then
-		ln -f -s $PWD ~/.bookmarks/$1
-	fi
-
-	if [ $# -eq 2 ]
-	then
-		ln -f -s `readlink -f $2` ~/.bookmarks/$1
-	fi
-
-	OPTIND=1
 }
 
 # define custom colors for ls

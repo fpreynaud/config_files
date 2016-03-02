@@ -1,4 +1,9 @@
 #!/bin/bash
+for i in /sbin/*
+do
+	alias $i="sudo $i"
+done
+
 alias ag='sudo apt-get'
 
 alias cdd='cd $OLDPWD'
@@ -27,7 +32,7 @@ alias lx='ls -X'
 
 alias mount='sudo mount'
 
-alias pdf='apvlv'
+alias pdf='evince'
 alias pedago='ssh -i ~/.ssh/pedago francois.reynaud@pedago-etu.ensiie.fr'
 alias popd='popd >/dev/null 2>/dev/null'
 

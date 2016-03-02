@@ -18,11 +18,13 @@ let mapleader = ","
 let maplocalleader = ","
 
 "Insert mode mappings
+inoremap <C-A> <ESC>maggVG<ESC>`a:'<,'>
 inoremap <Tab><Tab> <C-N>
 inoremap jk <ESC>
 inoremap JK <ESC>
 
 "Normal mode mappings
+nnoremap <C-A> maggVG<ESC>`a:'<,'>
 nnoremap cc d^d$
 "Open all folds
 nnoremap zO zR
