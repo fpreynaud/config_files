@@ -1,9 +1,11 @@
 #!/bin/bash
-for i in /sbin/*
+for i in `ls /sbin`
 do
 	alias $i="sudo $i"
 done
 
+alias ac='apt-cache'
+alias as='apt-cache search'
 alias ag='sudo apt-get'
 
 alias cdd='cd $OLDPWD'
@@ -11,7 +13,6 @@ alias cim='vim'
 alias clntex='/bin/rm *.out *.aux *.log'
 alias cq='cd ..'
 
-alias del='/bin/rm'
 alias du='du -h'
 
 alias ebrc='vim ~/.zshrc'
@@ -28,6 +29,7 @@ alias irc='ssh reynaud2012@perso.iiens.net'
 
 alias jobs='jobs -l'
 
+alias la='ls -A'
 alias lx='ls -X'
 
 alias mount='sudo mount'
@@ -36,7 +38,7 @@ alias pdf='evince'
 alias pedago='ssh -i ~/.ssh/pedago francois.reynaud@pedago-etu.ensiie.fr'
 alias popd='popd >/dev/null 2>/dev/null'
 
-alias rm='~/bin/dump 2>/dev/null'
+alias rm='~/bin/rm'
 alias rmdir='rmdir --ignore-fail-on-non-empty'
 
 alias sba='. ~/.bash_aliases'

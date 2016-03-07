@@ -10,6 +10,7 @@ set linebreak
 set autoindent
 set formatoptions=tcqro
 highlight Normal ctermbg=181818
+highlight ColorColumn ctermbg=8
 set background=dark
 
 syn on

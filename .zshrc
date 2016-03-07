@@ -81,20 +81,30 @@ function bookmark
 {
 	target="\033[${cyan};${underline}mtarget\033[${defaultDispAtt}m"
 	bookmark_name="\033[${cyan};${underline}mbookmark_name\033[${defaultDispAtt}m"
+	bookmark_folder="$HOME/.bookmarks"
+
+	option_value=
 	for option
 	do
+		if [ -n "$option_value" ]; then
+			eval "$option_value=\$option"
+			option_value=
+			continue
+		fi
+
 		case "$option" in
+			-t|--target)option_value="target_bookmark";;
 			-l|--list)
-				ls ~/.bookmarks;
+				ls $bookmark_folder;
 				return;;
 			-v|--long-listing)
-				ls -l ~/.bookmarks;
+				ls -l $bookmark_folder;
 				return;;
 			-h|--help)
 				echo -e "\033[${bold}mSynopsis:\033[${defaultDispAtt}m bookmark [options] [$bookmark_name] [$target]";
 				echo -e "\033[${bold}mDescription:\033[${defaultDispAtt}m";
 				echo -e \
-"    Creates a symbolic link to $target named $bookmark_name in ~/.bookmarks. If no argument is supplied, it is equivalent to bookmark -l.
+"    Creates a symbolic link to $target named $bookmark_name in $bookmark_folder. If no argument is supplied, it is equivalent to bookmark -l.
     If only $bookmark_name is supplied, $target defaults to the current directory.";
 				echo -e "\033[${bold}m
 Options
@@ -105,11 +115,54 @@ Options
 		esac
 	done
 
-	case "$#" in
-		"0") ls ~/.bookmarks;;
-		"1") ln -f -s $PWD ~/.bookmarks/$1;;
-		"2") ln -f -s `readlink -f $2` ~/.bookmarks/$1;;
-	esac
+	if [ -n "$target_bookmark" ]; then
+		eval "readlink -f $bookmark_folder/$target_bookmark"
+	else
+		case "$#" in
+			"0") ls $bookmark_folder;;
+			"1") ln -f -s $PWD $bookmark_folder/$1;;
+			"2") ln -f -s `readlink -f $2` $bookmark_folder/$1;;
+		esac
+	fi
+
+}
+
+function hide
+{
+	for file in $*; do
+		name=`/usr/bin/basename $file`
+		path=`echo $file|/bin/sed s/"$name"//`
+		if [ -z "$path" ]; then
+			path="./"
+		fi
+		/bin/mv $file $path.$name
+	done
+}
+
+unhide ()
+{
+	for file in $*; do
+		name=`/usr/bin/basename $file`
+		path=`echo $file|/bin/sed s/"$name"//`
+		if [ -e $file ]; then
+			revealed_name=`echo $name | /bin/sed s/^\.\(.\+\)/\1/`
+			/bin/mv $path$name $path$revealed_name
+		else
+			dot_name=.$name
+
+			if [ -z "$path" ]; then
+				path="./"
+			fi
+
+			if [ -e $path$dot_name ]; then
+				/bin/mv $path$dot_name $path$name
+			else
+				echo "Error: $path$dot_name does not exist"
+				return 1
+			fi
+
+		fi
+	done
 }
 
 # define custom colors for ls
