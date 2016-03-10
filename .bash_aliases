@@ -1,4 +1,6 @@
 #!/bin/bash
+alias nohup='nohup >/dev/null 2>/dev/null'
+
 for i in `ls /sbin`
 do
 	alias $i="sudo $i"
