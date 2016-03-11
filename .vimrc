@@ -37,14 +37,22 @@ set background=dark
 "C indent
 set cinoptions=""
 
-"Miscellaneous"
-"""""""""""""""
+"Highlighting"
+""""""""""""""
 
 "Make ColorColumn darkgrey
 highlight ColorColumn ctermbg=8
 
+"Make tab line red and white
+highlight TabLine cterm=NONE ctermfg=1 ctermbg=15
+highlight TabLineSel cterm=bold ctermfg=15 ctermbg=1
+highlight TabLineFill cterm=NONE ctermbg=15
+
 "Enable syntax highlighting
-syn on
+syntax on
+
+"Miscellaneous"
+"""""""""""""""
 
 "Set <leader> for mappings
 let mapleader = ","
@@ -65,7 +73,6 @@ inoremap JK <ESC>
 
 "Normal mode mappings"
 """"""""""""""""""""""
-
 
 "CTRL-A to select all
 nnoremap <C-A> maggVG<ESC>`a:'<,'>
@@ -105,7 +112,6 @@ nnoremap <C-h> :wincmd h<CR>
 nnoremap <C-l> :wincmd l<CR>
 nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-j> :wincmd j<CR>
-
 
 "Convenient fold until matching bracket/parenthesis
 nnoremap zff zf%

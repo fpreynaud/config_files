@@ -10,7 +10,7 @@ alias ac='apt-cache'
 alias as='apt-cache search'
 alias ag='sudo apt-get'
 
-alias cdd='cd $OLDPWD'
+alias cdd='popd'
 alias cim='vim'
 alias clntex='/bin/rm *.out *.aux *.log'
 alias cq='cd ..'

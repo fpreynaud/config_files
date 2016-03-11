@@ -62,7 +62,7 @@ export LESS="--RAW-CONTROL-CHARS"
 # "Go to directory containing the file" function (ocf = 'Open Containing Folder')
 function ocf
 {
-	cd $(dirname `readlink -e $1`)
+	cd $(dirname `readlink -m $1`)
 }
 
 unalias cd 2> /dev/null
