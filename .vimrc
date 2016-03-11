@@ -37,6 +37,9 @@ set background=dark
 "C indent
 set cinoptions=""
 
+"Tabs are of the form [tabpagenumber: modified_flag filename |]
+set tabline=%!SetTabLine()
+
 "Highlighting"
 """"""""""""""
 
@@ -215,39 +218,83 @@ function! Maps_tex ()
 	set tw=80
 
 	"En-tête
-	inoreabbr usepackages \documentclass[a4paper]{article}<CR>\usepackage[utf8]{inputenc}<CR>\usepackage[T1]{fontenc}<CR>\%\usepackage[francais]{babel}<CR>%\usepackage[left=1cm, bottom=1cm, top=0.5cm, right=1cm]{geometry}<CR>\usepackage{color}<CR>%\usepackage{graphicx}
-	inoreabb colortitles \definecolor{turquoise}{rgb}{.17,.97,.7}<CR> \definecolor{vert}{rgb}{.17,.97,.34}<CR> \newcommand{\cpart}[1]{\part{\textcolor{blue}{#1}}}<CR> \newcommand{\csection}[1]{\section{\textcolor{turquoise}{#1}}}<CR> \newcommand{\csubsection}[1]{\subsection{\textcolor{vert}{#1}}}
+	inoreabbr <buffer> usepackages \documentclass[a4paper]{article}<CR>\usepackage[utf8]{inputenc}<CR>\usepackage[T1]{fontenc}<CR>\%\usepackage[francais]{babel}<CR>%\usepackage[left=1cm, bottom=1cm, top=0.5cm, right=1cm]{geometry}<CR>\usepackage{color}<CR>%\usepackage{graphicx}
+	inoreabb <buffer> colortitles \definecolor{turquoise}{rgb}{.17,.97,.7}<CR> \definecolor{vert}{rgb}{.17,.97,.34}<CR> \newcommand{\cpart}[1]{\part{\textcolor{blue}{#1}}}<CR> \newcommand{\csection}[1]{\section{\textcolor{turquoise}{#1}}}<CR> \newcommand{\csubsection}[1]{\subsection{\textcolor{vert}{#1}}}
 
 	"Sections & paragraphs mappings
-	inoremap <leader>cpart \cpart{}<Left>
-	inoremap <leader>csec \csection{}<Left>
-	inoremap <leader>csub \csubsection{}<Left>
-	inoremap <leader>cssub \csubsubsection{}<Left>
-	inoremap <leader>part \part{}<Left>
-	inoremap <leader>sec \section{}<Left>
-	inoremap <leader>sub \subsection{}<Left>
-	inoremap <leader>ssub \subsubsection{}<Left>
-	inoremap <leader>par \paragraph{}<Left>
-	inoremap <leader>spar \subparagraph{}<Left>
+	inoremap <buffer> <leader>cpart \cpart{}<Left>
+	inoremap <buffer> <leader>csec \csection{}<Left>
+	inoremap <buffer> <leader>csub \csubsection{}<Left>
+	inoremap <buffer> <leader>cssub \csubsubsection{}<Left>
+	inoremap <buffer> <leader>part \part{}<Left>
+	inoremap <buffer> <leader>sec \section{}<Left>
+	inoremap <buffer> <leader>sub \subsection{}<Left>
+	inoremap <buffer> <leader>ssub \subsubsection{}<Left>
+	inoremap <buffer> <leader>par \paragraph{}<Left>
+	inoremap <buffer> <leader>spar \subparagraph{}<Left>
 
 	"Lists mappings
-	inoremap <leader>item \begin{itemize}<CR><Tab><CR><BS>\end{itemize}<ESC>ka
-	inoremap <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item
-	inoremap <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item
-	inoremap <leader>- \item
-	inoremap <leader>p- \item[$\bullet$]
+	inoremap <buffer> <leader>item \begin{itemize}<CR><Tab><CR><BS>\end{itemize}<ESC>ka
+	inoremap <buffer> <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item
+	inoremap <buffer> <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item
+	inoremap <buffer> <leader>- \item
+	inoremap <buffer> <leader>p- \item[$\bullet$]
 
 	"Environments mappings
-	inoremap <leader>beg \begin{}<CR>\end{}<Up><Right><Right><CR><Tab><Up><Right><Right><Right>
-	inoremap <leader>\[ \[\]<Left><Left><CR><CR><Up><Tab><Right>
-	inoremap <leader>tabular \begin{tabular}{\|\|}<CR><Tab><CR><BS>\end{tabular}<Up>
-	inoremap <leader>matrix \left(\begin{tabular}{}<CR><Tab><CR><BS>\end{tabular}\right)<Up>
+	inoremap <buffer> <leader>beg \begin{}<CR>\end{}<Up><Right><Right><CR><Tab><Up><Right><Right><Right>
+	inoremap <buffer> <leader>\[ \[\]<Left><Left><CR><CR><Up><Tab><Right>
+	inoremap <buffer> <leader>tabular \begin{tabular}{\|\|}<CR><Tab><CR><BS>\end{tabular}<Up>
+	inoremap <buffer> <leader>matrix \left(\begin{tabular}{}<CR><Tab><CR><BS>\end{tabular}\right)<Up>
 
 	"Other mappings
-	inoremap <leader>emp \emph{}<Left>
-	inoremap <leader>tbs \textbackslash{}
-	inoremap _ \
-	inoremap \ _
+	inoremap <buffer> <leader>emp \emph{}<Left>
+	inoremap <buffer> <leader>tbs \textbackslash{}
+	inoremap <buffer> _ \
+	inoremap <buffer> \ _
 
-	nnoremap <C-C> :!make<CR>
+	nnoremap <buffer> <C-C> :!make<CR>
+endfunction
+
+"Customizes the way information is displayed in tab line
+function! SetTabLine()
+	let s = ''
+
+	"Loop accross all tabs
+	for i in range(tabpagenr('$'))
+		let tabpage = i + 1
+		"If the tabpage is the current tabpage use highlight
+		"group for selected tab
+		if tabpage == tabpagenr()
+			let s .= '%#TabLineSel#'
+		"If the tabpage is not the current tabpage use
+		"highlight group for unselected tab
+		else
+			let s .= '%#TabLine#'
+		endif
+
+		let s .= '%' . tabpage . 'T'
+
+	    " the label is made by MyTabLabel()
+	let s .= tabpage . ': %{MyTabLabel(' . tabpage . ')} |'
+	  endfor
+
+	  " after the last tab fill with TabLineFill and reset tab page nr
+	  let s .= '%#TabLineFill#%T'
+
+	  " right-align the label to close the current tab page
+	  if tabpagenr('$') > 1
+	    let s .= '%=%#TabLine#%999XX'
+	  endif
+
+	  return s
+endfunction
+
+function! MyTabLabel(n)
+	let buflist = tabpagebuflist(a:n)
+	let winnr = tabpagewinnr(a:n)
+	let label = fnamemodify(bufname(buflist[winnr - 1]), ':t')
+	if getbufvar(buflist[winnr - 1], "&mod") == 1
+		let label = '[+]' . label
+	endif
+	return label
 endfunction
