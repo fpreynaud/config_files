@@ -1,4 +1,3 @@
-export PATH=$PATH:~/.local/bin
 [ -r $HOME/.dotfiles/shell/commonrc ] && \
     source $HOME/.dotfiles/shell/commonrc zsh
 

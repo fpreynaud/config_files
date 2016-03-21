@@ -1,5 +1,6 @@
 "Options"
 """""""""
+
 "Ignore case in search patterns
 set ignorecase
 
@@ -39,6 +40,7 @@ set cinoptions=""
 
 "Tabs are of the form [tabpagenumber: modified_flag filename |]
 set tabline=%!SetTabLine()
+
 
 "Highlighting"
 """"""""""""""
@@ -215,6 +217,10 @@ function! Maps_tex ()
 	if &ft != 'tex' && &ft != 'plaintex'
 		return
 	endif
+
+	"Make '_' be counted as part of words
+	set iskeyword+=_
+
 	set tw=80
 
 	"En-tête
@@ -237,7 +243,7 @@ function! Maps_tex ()
 	inoremap <buffer> <leader>item \begin{itemize}<CR><Tab><CR><BS>\end{itemize}<ESC>ka
 	inoremap <buffer> <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item
 	inoremap <buffer> <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item
-	inoremap <buffer> <leader>- \item
+	inoremap <buffer> <leader>- \item~
 	inoremap <buffer> <leader>p- \item[$\bullet$]
 
 	"Environments mappings
@@ -275,7 +281,7 @@ function! SetTabLine()
 		let s .= '%' . tabpage . 'T'
 
 	    " the label is made by MyTabLabel()
-	let s .= tabpage . ': %{MyTabLabel(' . tabpage . ')} |'
+	let s .= '[' . tabpage . ': %{MyTabLabel(' . tabpage . ')} ]'
 	  endfor
 
 	  " after the last tab fill with TabLineFill and reset tab page nr

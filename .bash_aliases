@@ -1,7 +1,9 @@
 #!/bin/bash
 alias nohup='nohup >/dev/null 2>/dev/null'
+alias ls='ls --group-directories-first --color=always'
+alias ù='%'
 
-for i in `ls /sbin`
+for i in `\ls /sbin`
 do
 	alias $i="sudo $i"
 done
