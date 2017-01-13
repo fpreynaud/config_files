@@ -33,7 +33,7 @@ set autoindent
 set formatoptions=tcqro
 
 "Make Vim adapt syntax highlighting for dark background
-set background=dark
+set background=light
 
 "C indent
 set cinoptions=""

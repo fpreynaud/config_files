@@ -3,6 +3,10 @@
 for i in `ls -d * .*`; do
 	case $i in
 		.|..|$0|.git);;
-		*) cp -Rui $i ~;;
+		*)	read -p "Copy $i ?" answer;
+			case $answer in
+				y|Y|yes|Yes)	cp -lf $i ~/;;
+				*)	continue;;
+			esac
 	esac
 done
