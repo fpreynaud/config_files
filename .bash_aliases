@@ -23,6 +23,8 @@ alias ebrc='vim ~/.zshrc'
 alias eba='vim  ~/.bash_aliases'
 alias evince='nohup evince'
 
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
 alias ftpedago='sftp -i ~/.ssh/pedago francois.reynaud@pedago-etu.ensiie.fr'
 
 alias graph_gen.sh='graph_gen.sh --nometric -v'
@@ -33,7 +35,11 @@ alias irc='ssh reynaud2012@perso.iiens.net'
 
 alias jobs='jobs -l'
 
+alias l='ls -CF'
 alias la='ls -A'
+alias lad='la -Ad'
+alias ll='ls -alF'
+alias ls='ls --color=auto --group-directories-first'
 alias lx='ls -X'
 
 alias mount='sudo mount'
