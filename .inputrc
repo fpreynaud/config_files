@@ -32,6 +32,10 @@ $if mode=emacs
 "\e[3~": delete-char
 "\e[2~": quoted-insert
 
+# Use arrow keys to do search history
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
 # mappings for "page up" and "page down" to step to the beginning/end
 # of the history
 # "\e[5~": beginning-of-history

@@ -19,7 +19,7 @@ alias cq='cd ..'
 
 alias du='du -h'
 
-alias ebrc='vim ~/.zshrc'
+alias ebrc='vim ~/.bashrc'
 alias eba='vim  ~/.bash_aliases'
 alias evince='nohup evince'
 
@@ -48,11 +48,10 @@ alias pdf='evince'
 alias pedago='ssh -i ~/.ssh/pedago francois.reynaud@pedago-etu.ensiie.fr'
 alias popd='popd >/dev/null 2>/dev/null'
 
-alias rm='~/bin/rm'
 alias rmdir='rmdir --ignore-fail-on-non-empty'
 
 alias sba='. ~/.bash_aliases'
-alias sbrc='. ~/.zshrc'
+alias sbrc='. ~/.bashrc'
 #alias sf='echo montage des dossiers partagés; sudo mount -t vboxsf mes_documents ~/documents; sudo mount -t vboxsf mes_images ~/images && echo montage réussi'
 alias sf='echo montage des dossiers partagés; ln -s /media/sf_mes_documents ~/documents && echo montage réussi'
 
