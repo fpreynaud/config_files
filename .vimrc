@@ -66,9 +66,6 @@ let maplocalleader = ","
 "Insert mode mappings"
 """"""""""""""""""""""
 
-"CTRL-A to select all
-inoremap <C-A> <ESC>maggVG<ESC>`a:'<,'>
-
 "Use tab for completion
 inoremap <Tab><Tab> <C-N>
 
@@ -78,9 +75,6 @@ inoremap JK <ESC>
 
 "Normal mode mappings"
 """"""""""""""""""""""
-
-"CTRL-A to select all
-nnoremap <C-A> maggVG<ESC>`a:'<,'>
 
 "Delete whole line
 nnoremap cc d^d$

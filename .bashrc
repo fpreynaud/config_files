@@ -84,10 +84,11 @@ defaultDispAtt=0
 export CDPATH=$CDPATH:~/.bookmarks
 export DEFAULTPATH=/usr/local/bin:/usr/bin:/bin
 export HISTTIMEFORMAT='%d/%m/%y %H:%M '
-export PATH=$DEFAULTPATH:./
+export PATH=$DEFAULTPATH:./:/usr/local/sbin:/usr/sbin:/sbin
 export PDF_READER='apvlv'
 export PS1="\[\e[${bgwhite};${red};${bold}m\]\w\[\e[${defaultDispAtt}m\]\n\r\[\e[${bgwhite};${red};${bold}m\]\u@\h(\t)\$\[\e[${defaultDispAtt}m\]\n"
 export trash=~/.local/share/Trash/files
+export PAGER=less
 
 # colors for less
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
@@ -164,6 +165,5 @@ Options:
 # define custom colors for ls
 eval `dircolors ~/.dircolors`
 
-# Enable autocd
+# enable autochdir: typing <directoryname> is the same as typing cd <directoryname>
 shopt -s autocd
-
