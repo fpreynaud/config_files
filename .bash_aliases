@@ -29,6 +29,7 @@ alias ftpedago='sftp -i ~/.ssh/pedago francois.reynaud@pedago-etu.ensiie.fr'
 
 alias graph_gen.sh='graph_gen.sh --nometric -v'
 alias grep='grep --color=auto -n'
+alias  grep='grep'
 
 alias ippublique='wget -qO- icanhazip.com'
 alias irc='ssh reynaud2012@perso.iiens.net'
