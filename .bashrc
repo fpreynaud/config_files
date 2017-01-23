@@ -86,7 +86,7 @@ export DEFAULTPATH=/usr/local/bin:/usr/bin:/bin
 export HISTTIMEFORMAT='%d/%m/%y %H:%M '
 export PATH=$DEFAULTPATH:./
 export PDF_READER='apvlv'
-export PS1="\[\e[${bgwhite};${blue};${bold}m\]\w\[\e[${defaultDispAtt}m\]\n\r\[\e[${bgwhite};${blue};${bold}m\]\u@\h(\t)\$\[\e[${defaultDispAtt}m\]\n"
+export PS1="\[\e[${bgwhite};${red};${bold}m\]\w\[\e[${defaultDispAtt}m\]\n\r\[\e[${bgwhite};${red};${bold}m\]\u@\h(\t)\$\[\e[${defaultDispAtt}m\]\n"
 export trash=~/.local/share/Trash/files
 
 # colors for less
@@ -163,4 +163,7 @@ Options:
 
 # define custom colors for ls
 eval `dircolors ~/.dircolors`
+
+# Enable autocd
+shopt -s autocd
 
