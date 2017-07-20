@@ -60,35 +60,47 @@ fi
 umask 027
 
 #associate names with console codes
-black=30
-bgblack=40
-red=31
-bgred=41
-green=32
-bggreen=42
-brown=33
-bgbrown=43
-blue=34
-bgblue=44
-magenta=35
-bgmagenta=45
-cyan=36
-bgcyan=46
-white=37
-bgwhite=47
-bold=1
-nobold=21
-defaultDispAtt=0
+black="\[\e[30m\]"
+red="\[\e[31m\]"
+green="\[\e[32m\]"
+yellow="\[\e[33m\]"
+blue="\[\e[34m\]"
+magenta="\[\e[35m\]"
+cyan="\[\e[36m\]"
+white="\[\e[37m\]"
+bgblack="\[\e[40m\]"
+bgred="\[\e[41m\]"
+bggreen="\[\e[42m\]"
+bgyellow="\[\e[43m\]"
+bgblue="\[\e[44m\]"
+bgmagenta="\[\e[45m\]"
+bgcyan="\[\e[46m\]"
+bgwhite="\[\033[47m\]"
+bold="\[\e[1m\]"
+nocol="\[\e[0m\]"
+
+PROMPT_COMMAND="\
+userHost=\"\$bgblue\$bold[\u@\h \W]\";\
+_jobs='';\
+nJobs=\$(jobs|wc -l);\
+if [ \"\$nJobs\" -gt 0 ]; then\
+        _jobs=\"\$bgyellow[\$nJobs]\";\
+		fi
+		currentBranch='';\
+		git branch >/dev/null 2>/dev/null;\
+		status=\"\$?\";\
+		if [ \$status -eq 0 ]; then\
+		        currentBranch=\$bggreen[\$(git branch|\grep '*'|cut -f 2 -d ' ')];\
+				fi;\
+				PS1=\"\$white\$userHost\$_jobs\$currentBranch\$nocol \";"
 
 # exports
 export CDPATH=$CDPATH:~/.bookmarks
-export DEFAULTPATH=/usr/local/bin:/usr/bin:/bin
+export DEFAULTPATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 export HISTTIMEFORMAT='%d/%m/%y %H:%M '
-export PATH=$DEFAULTPATH:./:/usr/local/sbin:/usr/sbin:/sbin
+export PATH=$DEFAULTPATH:./
 export PDF_READER='apvlv'
-export PS1="\[\e[${bgwhite};${red};${bold}m\]\w\[\e[${defaultDispAtt}m\]\n\r\[\e[${bgwhite};${red};${bold}m\]\u@\h(\t)\$\[\e[${defaultDispAtt}m\]\n"
 export trash=~/.local/share/Trash/files
-export PAGER=less
 
 # colors for less
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
@@ -108,6 +120,16 @@ export LESS="--RAW-CONTROL-CHARS"
 
 # functions
 #
+
+# @usage mkdird <direcory>
+# @param <direcory> The directory to create.
+# @desc Create directory, then cd into it.
+function mkdird
+{
+	mkdir $1
+	cd $1
+}
+
 # "Go to directory containing the file" function (ocf = 'Open Containing Folder')
 function ocf
 {
@@ -165,5 +187,12 @@ Options:
 # define custom colors for ls
 eval `dircolors ~/.dircolors`
 
-# enable autochdir: typing <directoryname> is the same as typing cd <directoryname>
+# Enable autocd
 shopt -s autocd
+
+# Start network if OS is Kali
+if [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; then
+	ifconfig eth0 up
+	dhclient eth0
+	service smbd start
+fi
