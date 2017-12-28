@@ -74,6 +74,6 @@ set completion-ignore-case on
 set colored-completion-prefix on
 
 "\C-g": kill-whole-line
-"	": menu-complete
+#"	": menu-complete
 "\e[3;5~": kill-word
 Meta-Rubout: backward-kill-word

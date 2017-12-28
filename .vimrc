@@ -2,45 +2,35 @@
 """""""""
 
 "Ignore case in search patterns
-set ignorecase
-
 "Display line numbers
-set number
-
-"Enable mouse
-set mouse=a
-
-"Make tabs 4 characters wide
-set tabstop=4
-set shiftwidth=4
-
 "Show partial command in status line
-set showcmd
+set ignorecase number showcmd
 
 "Enable incremental search
-set incsearch
-
 "Change working directory automatically when editing a file
-set autochdir
-
 "Wrap long lines at a character in 'breakat'
-set linebreak
+set incsearch autochdir linebreak
+
+"Enable mouse
+"Make tabs 4 characters wide
+"Make indent shift 4 characters wide
+set mouse=a tabstop=4 shiftwidth=4
 
 "Copy indent from current line when starting a new line
-set autoindent
+"No search result highlighting
+set autoindent nohlsearch
 
 "Auto-wrap text and comments using textwidth,  allow formatting of comments with "gq", Automatically insert the current comment leader after hitting 'o' or 'O' in Normal mode and <Enter> in Insert mode
 set formatoptions=tcqro
 
 "Make Vim adapt syntax highlighting for dark background
-set background=dark
-
 "C indent
-set cinoptions=""
+"Display fold column
+set background=dark cinoptions="" 
+set foldcolumn=2
 
 "Tabs are of the form [tabpagenumber: modified_flag filename |]
 set tabline=%!SetTabLine()
-
 
 "Highlighting"
 """"""""""""""
@@ -49,9 +39,9 @@ set tabline=%!SetTabLine()
 highlight ColorColumn ctermbg=8
 
 "Make tab line red and white
-highlight TabLine cterm=NONE ctermfg=1 ctermbg=15
-highlight TabLineSel cterm=bold ctermfg=15 ctermbg=1
-highlight TabLineFill cterm=NONE ctermbg=15
+highlight TabLine cterm=NONE ctermfg=6 ctermbg=0
+highlight TabLineSel cterm=bold ctermfg=3 ctermbg=8
+highlight TabLineFill cterm=NONE ctermbg=0
 
 "Enable syntax highlighting
 syntax on
@@ -66,9 +56,6 @@ let maplocalleader = ","
 "Insert mode mappings"
 """"""""""""""""""""""
 
-"Use tab for completion
-inoremap <Tab><Tab> <C-N>
-
 "Easy return to normal mode
 inoremap jk <ESC>
 inoremap JK <ESC>
@@ -77,7 +64,7 @@ inoremap JK <ESC>
 """"""""""""""""""""""
 
 "Delete whole line
-nnoremap cc d^d$
+nnoremap DD d^d$
 
 "Open all folds
 nnoremap zO zR
@@ -119,9 +106,6 @@ nnoremap zff zf%
 nnoremap j gj
 nnoremap k gk
 
-"Erase whole document
-nnoremap DD :%d<CR>
-
 "Move current line up or down
 nnoremap - :m .-2<CR>
 nnoremap + :m .+1<CR>
@@ -152,10 +136,7 @@ nnoremap <leader>" I"<ESC>j
 nnoremap <leader># I#<ESC>j
 
 "<CR> inserts newline in normal mode
-nnoremap <CR> i<CR><ESC>
-
-"Remove trailing spaces and save view before saving
-nnoremap :w<CR> ma:%s/\s\+$//e<CR>:mkview<CR>`a:w<CR>
+nnoremap <CR> o<ESC>
 
 "When jumping to next occurence, put it in the middle of the screen
 nnoremap n nzz
