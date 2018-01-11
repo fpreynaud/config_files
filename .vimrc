@@ -30,13 +30,14 @@ set background=dark cinoptions=""
 set foldcolumn=2
 
 "Tabs are of the form [tabpagenumber: modified_flag filename |]
-set tabline=%!SetTabLine()
+"Set maximum nesting level for 'indent' and 'syntax' foldmethods
+set tabline=%!SetTabLine() foldnestmax=3
 
 "Highlighting"
 """"""""""""""
 
 "Make ColorColumn darkgrey
-highlight ColorColumn ctermbg=8
+highlight ColorColumn ctermbg=0
 
 "Make tab line red and white
 highlight TabLine cterm=NONE ctermfg=6 ctermbg=0
@@ -62,6 +63,14 @@ inoremap JK <ESC>
 
 "Normal mode mappings"
 """"""""""""""""""""""
+
+"Scroll up/down and leave cursor on same line
+nnoremap <M-Up> <c-Y>gk
+nnoremap <M-Down> <C-E>gj
+
+"Modify windows height and width
+nnoremap <F2> <C-W>=
+nnoremap <F3> :resize<CR>:vertical resize<CR>
 
 "Delete whole line
 nnoremap DD d^d$
@@ -111,8 +120,8 @@ nnoremap - :m .-2<CR>
 nnoremap + :m .+1<CR>
 
 "Move to previous or next tab page
-nnoremap <S-Tab> :tabp<CR>
-nnoremap <Tab> :tabn<CR>
+nnoremap <M-Left> gT
+nnoremap <M-Right> gt
 
 "Alias for CTRL-I, because CTRL-I is now :tabn<CR>
 nnoremap <C-Y> <C-I>
@@ -279,3 +288,9 @@ function! MyTabLabel(n)
 	endif
 	return label
 endfunction
+
+" User-defined commands "
+"""""""""""""""""""""""""
+
+command! Changeindentstyle set expandtab! smarttab!
+command! -nargs=? -complete=buffer Vsb vert sb <args>
