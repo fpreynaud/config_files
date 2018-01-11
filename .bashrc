@@ -1,6 +1,4 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+# .bashrc
 
 
 # If not running interactively, don't do anything
@@ -95,11 +93,7 @@ if [ \"\$nJobs\" -gt 0 ]; then\
 				PS1=\"\$white\$userHost\$_jobs\$currentBranch\$nocol \";"
 
 # exports
-export CDPATH=$CDPATH:~/.bookmarks
-export DEFAULTPATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 export HISTTIMEFORMAT='%d/%m/%y %H:%M '
-export PATH=$DEFAULTPATH:./
-export PDF_READER='apvlv'
 export trash=~/.local/share/Trash/files
 
 # colors for less
@@ -120,14 +114,14 @@ export LESS="--RAW-CONTROL-CHARS"
 
 # functions
 #
-
-# @usage mkdird <direcory>
-# @param <direcory> The directory to create.
-# @desc Create directory, then cd into it.
-function mkdird
+function pyv
 {
-	mkdir $1
-	cd $1
+	version=$(python --version |& \grep -o "[0-9]\.[0-9]")	
+	case $version in
+		2.7) ln -sf /usr/local/bin/python2.6 /usr/local/bin/python;;
+		2.6) ln -sf /usr/local/bin/python2.7 /usr/local/bin/python;;
+	esac
+	echo $(python --version)
 }
 
 # "Go to directory containing the file" function (ocf = 'Open Containing Folder')
@@ -136,53 +130,15 @@ function ocf
 	cd $(dirname `readlink -e $1`)
 }
 
-unalias cd 2> /dev/null
 # synopsis: cs [dir]
 # go into dir and list its contents immediatly
 function cs
 {
 	pushd . >/dev/null
-	cd -P "$@" && ls
+	\cd -P "$@" && ls --group-directories-first
 }
-alias cd=cs
 
-# synopsis: bookmark bookmark_name [target]
-# creates a symbolic link to target in ~/.bookmarks. The default value for
-# target is $PWD
-function bookmark
-{
-	getopts ":vsh" opt
-	case $opt in
-		s)ls ~/.bookmarks;
-		OPTIND=1;
-		shift;;
-		v)ls -l ~/.bookmarks;
-		OPTIND=1;
-		shift;;
-		h)echo -e "Synopsis: bookmark bookmark_name [target]
 
-creates a symbolic link named bookmark_name to target in ~/.bookmarks. The default value for target is \$PWD
-
-Options:
--s show bookmarks
--v show bookmarks in long format
--h display this help";
-	OPTIND=1
-		return;;
-	esac
-
-	if [ $# -eq 1 ]
-	then
-		ln -f -s $PWD ~/.bookmarks/$1
-	fi
-
-	if [ $# -eq 2 ]
-	then
-		ln -f -s `readlink -f $2` ~/.bookmarks/$1
-	fi
-
-	OPTIND=1
-}
 
 # define custom colors for ls
 eval `dircolors ~/.dircolors`
