@@ -1,7 +1,8 @@
 #!/bin/bash
 
-for i in `ls -d * .*`; do
-	case $i in
+WD=$(dirname $0)
+for i in `ls -d $WD/* $WD/.*`; do
+	case $(basename $i) in
 		.|..|$0|.git);;
 		*)	read -p "Copy $i ?" answer;
 			case $answer in

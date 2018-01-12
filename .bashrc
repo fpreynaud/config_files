@@ -79,6 +79,7 @@ nocol="\[\e[0m\]"
 
 PROMPT_COMMAND="\
 userHost=\"\$bgblue\$bold[\u@\h \W]\";\
+echo -e \"\033]2;\${USER}@\${HOSTNAME}:\${PWD/#\$HOME/~}\007\";\
 _jobs='';\
 nJobs=\$(jobs|wc -l);\
 if [ \"\$nJobs\" -gt 0 ]; then\
@@ -147,7 +148,7 @@ eval `dircolors ~/.dircolors`
 shopt -s autocd
 
 # Start network if OS is Kali
-if [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; then
+if [ -e "/etc/os-release" ] && [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; then
 	ifconfig eth0 up
 	dhclient eth0
 	service smbd start
