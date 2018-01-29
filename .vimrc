@@ -73,7 +73,7 @@ nnoremap <F2> <C-W>=
 nnoremap <F3> :resize<CR>:vertical resize<CR>
 
 "Delete whole line
-nnoremap DD d^d$
+nnoremap DD $d^d$
 
 "Open all folds
 nnoremap zO zR
