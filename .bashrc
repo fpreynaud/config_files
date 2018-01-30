@@ -78,7 +78,7 @@ bold="\[\e[1m\]"
 nocol="\[\e[0m\]"
 
 PROMPT_COMMAND="\
-	userHost=\"\$bgblue\$bold[\u@\h \W]\";\
+	userHost=\"\$bgblue[\u@\h \W]\";\
 	echo -e \"\033]2;\${USER}@\${HOSTNAME}:\${PWD/#\$HOME/~}\007\";\
 	_jobs='';\
 	nJobs=\$(jobs|wc -l);\
@@ -86,12 +86,11 @@ PROMPT_COMMAND="\
 		_jobs=\"\$bgyellow[\$nJobs]\";\
 	fi
 	currentBranch='';\
-	git branch >/dev/null 2>/dev/null;\
-	status=\"\$?\";\
-	if [ \$status -eq 0 ]; then\
-		currentBranch=\$bggreen[\$(git branch|\grep '*'|cut -f 2 -d ' ')];\
+	if [ -d .git ]; then\
+		branchName=\"\$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')\";\
+		currentBranch=\"\$bggreen[\$branchName]\";\
 	fi;\
-	PS1=\"\$white\$userHost\$_jobs\$currentBranch\$nocol \";"
+	PS1=\"\$white\$bold\$userHost\$_jobs\$currentBranch\$nocol \";"
 
 # exports
 export HISTTIMEFORMAT='%d/%m/%y %H:%M '
