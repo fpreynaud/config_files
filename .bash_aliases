@@ -46,7 +46,6 @@ alias mount='sudo mount'
 alias pdf='evince'
 alias popd='popd >/dev/null 2>/dev/null'
 
-alias rm="if [ -e \"$HOME/bin/rm\" ]; then therm=\"$HOME/bin/rm\"; else therm=\"/bin/rm\"; fi; eval $therm"
 alias rmdir='rmdir --ignore-fail-on-non-empty'
 
 alias sba='. ~/.bash_aliases'
