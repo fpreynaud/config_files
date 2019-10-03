@@ -92,6 +92,16 @@ function ocf
 	cd $(dirname `readlink -e $1`)
 }
 
+function rm
+{
+	if [ -e "$HOME/bin/rm" ]; then 
+		therm="$HOME/bin/rm"
+	else 
+		therm="/bin/rm"
+	fi 
+	eval $therm "$@"
+}
+
 # synopsis: cs [dir]
 # go into dir and list its contents immediatly
 function cs
