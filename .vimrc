@@ -159,9 +159,9 @@ nnoremap ù %
 "Visual mode mappings"
 """""""""""""""""""""
 
-"Move selected lines up or down. Cannot be repeated
-vnoremap + :m '>+1<CR>
-vnoremap - :m '<-2<CR>
+"Move selected lines up or down.
+vnoremap + :m '>+1<CR>'<V'>
+vnoremap - :m '<-2<CR>'<V'>
 
 "Autocommands"
 """"""""""""""
@@ -182,14 +182,14 @@ autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.P :source $VIMRUNTIME/syntax
 autocmd Bufnewfile,bufreadpre,bufread,bufreadpost {*.c,*.cpp} :set cindent
 "Don't break text using textwidth
 autocmd FileType {c,cpp} :set formatoptions=cqro
-"Color Column 80
-autocmd FileType {c,cpp} :set cc=80
+"Color Column 79
+autocmd FileType {c,cpp} :set cc=79
 "set foldmethod to 'syntax'
-autocmd FileType {c,cpp} :set foldmethod=syntax
+"autocmd FileType {c,cpp} :set foldmethod=syntax
 
 "C-specific autocommands
 "Write minimal C code
-autocmd Bufnewfile *.c :0r ~/.vim/minC.c
+"autocmd Bufnewfile *.c :0r ~/.vim/minC.c
 
 "C++-specific autocommands
 "Write minimal C++ code
