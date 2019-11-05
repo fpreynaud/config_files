@@ -1,12 +1,13 @@
 set $SHOW_ASM = 1
 set $SHOW_REGISTERS = 1
-set $old_eax = $eax
-set $old_ebx = $ebx
-set $old_ecx = $ecx
-set $old_edx = $edx
-set $old_esp = $esp
-set $old_ebp = $ebp
-set $old_eip = $eip
+set $INSTRUCTIONS_BEFORE = 15
+set $old_eax = 0
+set $old_ebx = 0
+set $old_ecx = 0
+set $old_edx = 0
+set $old_esp = 0
+set $old_ebp = 0
+set $previous_eip = 0
 
 define reg
 	if $SHOW_REGISTERS == 1
@@ -19,7 +20,7 @@ define reg
 			echo \033[33m
 			set $old_eax = $eax
 		end
-		printf "%x ",$eax
+		printf "%08x ",$eax
 		echo \033[0m
 		echo \033[31m
 		printf "ebx: "
@@ -28,7 +29,7 @@ define reg
 			echo \033[33m
 			set $old_ebx = $ebx
 		end
-		printf "%x ",$ebx
+		printf "%08x ",$ebx
 		echo \033[31m
 		printf "ecx: "
 		echo \033[0m
@@ -36,7 +37,7 @@ define reg
 			echo \033[33m
 			set $old_ecx = $ecx
 		end
-		printf "%x ",$ecx
+		printf "%08x ",$ecx
 		echo \033[31m
 		printf "edx: "
 		echo \033[0m
@@ -44,7 +45,7 @@ define reg
 			echo \033[33m
 			set $old_edx = $edx
 		end
-		printf "%x\n",$edx
+		printf "%08x\n",$edx
 		echo \033[31m
 		printf "esp: "
 		echo \033[0m
@@ -52,7 +53,7 @@ define reg
 			echo \033[33m
 			set $old_esp = $esp
 		end
-		printf "%x ",$esp
+		printf "%08x ",$esp
 		echo \033[31m
 		printf "ebp: "
 		echo \033[0m
@@ -60,15 +61,15 @@ define reg
 			echo \033[33m
 			set $old_ebp = $ebp
 		end
-		printf "%x ",$ebp
+		printf "%08x ",$ebp
 		echo \033[31m
 		printf "eip: "
 		echo \033[0m
-		if $eip != $old_eip
+		if $eip != $previous_eip
 			echo \033[33m
-			set $old_eip = $eip
+			set $previous_eip = $eip
 		end
-		printf "%x\n",$eip
+		printf "%08x\n",$eip
 		echo \033[32m
 		echo --------------------------------------------------------\n
 		echo \033[0m
@@ -80,11 +81,27 @@ end
 
 define asm_context
 	if $SHOW_ASM == 1
-		if $eip == *main + 0
-			disassemble $eip,$eip + 0x12
-		else
-			disassemble $eip -0x12,$eip + 0x12
+		if $SHOW_REGISTERS == 0
+			echo \033[32m
+			echo --------------------------------------------------------\n
+			echo \033[0m
 		end
+		set $i = $INSTRUCTIONS_BEFORE
+		while $i > 1
+			eval "set $x = $old_eip%d",$i
+			eval "set $y = $old_eip%d",$i - 1
+			if $x != $y
+				x/1i $x
+			end
+			set $i = $i - 1
+		end
+		if $old_eip1 != $eip
+			x/1i $old_eip1
+		end
+		x/10i $eip
+		echo \033[32m
+		echo --------------------------------------------------------\n
+		echo \033[0m
 	end
 end
 document asm_context
@@ -118,7 +135,7 @@ define showregs
 		set $SHOW_REGISTERS = $arg0
 	end
 end
-document showasm
+document showregs
 	Toggle showing registers
 end
 
@@ -138,12 +155,53 @@ document context-on
 	Switch display of context on
 end
 
-define hook-stop
-	reg
-	asm_context
+define init-eips
+	if $argc == 0
+		set $i = $INSTRUCTIONS_BEFORE
+		set $INSTRUCTIONS_BEFORE_SAVE = $INSTRUCTIONS_BEFORE
+	else
+		set $i = $arg0
+		set $INSTRUCTIONS_BEFORE_SAVE = $INSTRUCTIONS_BEFORE
+		set $INSTRUCTIONS_BEFORE = $arg0
+	end
+
+	set $j = $i
+	while $j > 0
+		eval "set $x = $old_eip%d",$j
+		if $_isvoid ($x) == 1
+			eval "set $old_eip%d = $eip",$j
+		end
+		set $j = $j - 1
+	end
+
+	if $i < $INSTRUCTIONS_BEFORE_SAVE
+		set $j = $INSTRUCTIONS_BEFORE_SAVE
+		while $j > $i
+			eval "set $old_eip%d = $old_eip%d",$j,$i
+			set $j = $j - 1
+		end
+	end
+end
+document init-eips
+	Initialize $old_eip<n> variables
 end
 
-define start
+define hook-stop
+	reg
+	init-eips
+	asm_context
+	set $i = $INSTRUCTIONS_BEFORE
+	while $i > 1
+		eval "set $old_eip%d = $old_eip%d",$i,$i-1
+		set $i = $i - 1
+	end
+	set $old_eip1 = $eip
+end
+document hook-stop
+	What to do on program breaks
+end
+
+define _run
 	break *main + 0
 	if $argc == 0
 		run
@@ -298,7 +356,13 @@ define start
 	if $argc == 50
 		run $arg0 $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8 $arg9 $arg10 $arg11 $arg12 $arg13 $arg14 $arg15 $arg16 $arg17 $arg18 $arg19 $arg20 $arg21 $arg22 $arg23 $arg24 $arg25 $arg26 $arg27 $arg28 $arg29 $arg30 $arg31 $arg32 $arg33 $arg34 $arg35 $arg36 $arg37 $arg38 $arg39 $arg40 $arg41 $arg42 $arg43 $arg44 $arg45 $arg46 $arg47 $arg48 $arg49
 	end
+	set $old_eax = $eax
+	set $old_ebx = $ebx
+	set $old_ecx = $ecx
+	set $old_edx = $edx
+	set $old_esp = $esp
+	set $old_ebp = $ebp
 end
-document start
+document _run
 	Create breakpoint at main and run program
 end
