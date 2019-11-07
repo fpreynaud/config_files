@@ -1,6 +1,8 @@
 set $SHOW_ASM = 1
 set $SHOW_REGISTERS = 1
-set $INSTRUCTIONS_BEFORE = 15
+set $SHOW_STACK = 1
+set $INSTRUCTIONS_BEFORE = 3
+set $STACK_DISPLAY_SIZE = 4
 set $old_eax = 0
 set $old_ebx = 0
 set $old_ecx = 0
@@ -9,10 +11,20 @@ set $old_esp = 0
 set $old_ebp = 0
 set $previous_eip = 0
 
+define green-line
+	echo \033[32m
+	echo \n--------------------------------------------------------\n
+	echo \033[0m
+end
+document green-line
+	Print a green line
+end
+
 define reg
 	if $SHOW_REGISTERS == 1
-		echo \033[32m
-		echo \n--------------------------------------------------------\n
+		green-line
+		echo Registers
+		green-line
 		echo \033[31m
 		printf "eax: " 
 		echo \033[0m
@@ -69,23 +81,60 @@ define reg
 			echo \033[33m
 			set $previous_eip = $eip
 		end
-		printf "%08x\n",$eip
-		echo \033[32m
-		echo --------------------------------------------------------\n
+		printf "%08x",$eip
 		echo \033[0m
 	end
+	echo \n
 end
 document reg
 	Show values of registers
 end
 
+define stack
+	if $SHOW_STACK == 1
+		echo\n
+		green-line
+		echo Stack
+		green-line
+		set $n = 4
+		if $argc == 1
+			set $n = $arg0
+			set $STACK_DISPLAY_SIZE = $arg0
+		end
+		set $i = 0
+		while $i < $n
+			if $i == 0
+				if $ebp == $esp
+					echo \033[33m
+					printf "=> "
+					echo \033[0m
+				else
+					printf "=> "
+				end
+			else
+				if $ebp == $esp + 4*$i
+					echo \033[33m
+					printf "=> "
+					echo \033[0m
+				else
+					printf "   "
+				end
+			end
+			x/xw $esp + 4*$i
+			set $i = $i + 1
+		end
+	end
+end
+document stack
+	Display the stack
+end
+
 define asm_context
 	if $SHOW_ASM == 1
-		if $SHOW_REGISTERS == 0
-			echo \033[32m
-			echo --------------------------------------------------------\n
-			echo \033[0m
-		end
+		echo \n
+		green-line
+		echo Assembly
+		green-line
 		set $i = $INSTRUCTIONS_BEFORE
 		while $i > 1
 			eval "set $x = $old_eip%d",$i
@@ -99,13 +148,25 @@ define asm_context
 			x/1i $old_eip1
 		end
 		x/10i $eip
-		echo \033[32m
-		echo --------------------------------------------------------\n
-		echo \033[0m
 	end
 end
 document asm_context
 	Show code around current program counter
+end
+
+define showstack
+	if $argc == 0
+		if $SHOW_STACK == 1
+			set $SHOW_STACK = 0
+		else
+			set $SHOW_STACK = 1
+		end
+	else
+		set $SHOW_STACK = $arg0
+	end
+end
+document showstack
+	Toggle display of the stack
 end
 
 define showasm
@@ -190,6 +251,8 @@ define hook-stop
 	reg
 	init-eips
 	asm_context
+	stack $STACK_DISPLAY_SIZE
+
 	set $i = $INSTRUCTIONS_BEFORE
 	while $i > 1
 		eval "set $old_eip%d = $old_eip%d",$i,$i-1
