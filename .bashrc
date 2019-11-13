@@ -90,7 +90,7 @@ PROMPT_COMMAND="\
 		branchName=\"\$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')\";\
 		currentBranch=\"\$bggreen[\$branchName]\";\
 	fi;\
-	PS1=\"\$white\$bold\$userHost\$_jobs\$currentBranch\$nocol \";"
+	PS1=\"\$white\$bold\$userHost\$_jobs\$currentBranch \!\$nocol \";"
 
 # exports
 export HISTTIMEFORMAT='%d/%m/%y %H:%M '
@@ -162,3 +162,5 @@ if [ -e "/etc/os-release" ] && [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; t
 	dhclient eth0
 	service smbd start
 fi
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:.
+shopt -s histverify lithist xpg_echo
