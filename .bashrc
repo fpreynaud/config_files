@@ -1,6 +1,5 @@
 # .bashrc
 
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -12,16 +11,12 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
+HISTSIZE=2000
 HISTFILESIZE=2000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -77,20 +72,29 @@ bgwhite="\[\033[47m\]"
 bold="\[\e[1m\]"
 nocol="\[\e[0m\]"
 
-PROMPT_COMMAND="\
-	userHost=\"\$bgblue[\u@\h \W]\";\
-	echo -e \"\033]2;\${USER}@\${HOSTNAME}:\${PWD/#\$HOME/~}\007\";\
-	_jobs='';\
-	nJobs=\$(jobs|wc -l);\
-	if [ \"\$nJobs\" -gt 0 ]; then\
-		_jobs=\"\$bgyellow[\$nJobs]\";\
+function run_on_prompt()
+{
+	local userHost="$bgblue[\u@\h \W]";
+	#echo -e "\033]2;${USER}@${HOSTNAME}:${PWD/#$HOME/\~}"; #Set window title
+	local _jobs='';
+	local nJobs=$(jobs|wc -l);
+	if [ "$nJobs" -gt 0 ]; then
+		_jobs="$bgyellow[$nJobs]";
 	fi
-	currentBranch='';\
-	if [ -d .git ]; then\
-		branchName=\"\$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')\";\
-		currentBranch=\"\$bggreen[\$branchName]\";\
-	fi;\
-	PS1=\"\$white\$bold\$userHost\$_jobs\$currentBranch \!\$nocol \";"
+	local currentBranch='';
+	if [ -d .git ]; then
+		local branchName="$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')";
+		currentBranch="$bggreen[$branchName]";
+	fi;
+	PS1="$white$bold$userHost$_jobs$currentBranch$bgwhite$black[\!]$nocol " # [user@host workingDirectory][backGroundJobsCount][currentGitBranch][nextCommandHistoryNumber]
+	local lastCommand=$(history 1|sed s/"\(\s\+\)"/" "/g|cut -f5- -d " ")
+	if [ "$lastCommand" != "$PERSISTENT_HISTORY_LAST" ]; then
+		echo $lastCommand >> ~/.persistent_history
+		export PERSISTENT_HISTORY_LAST=$lastCommand
+	fi
+}
+
+PROMPT_COMMAND="run_on_prompt"
 
 # exports
 export HISTTIMEFORMAT='%d/%m/%y %H:%M '
@@ -116,7 +120,7 @@ export LESS="--RAW-CONTROL-CHARS"
 #
 function pyv
 {
-	version=$(python --version |& \grep -o "[0-9]\.[0-9]")	
+	local version=$(python --version |& \grep -o "[0-9]\.[0-9]")
 	case $version in
 		2.7) ln -sf /usr/local/bin/python2.6 /usr/local/bin/python;;
 		2.6) ln -sf /usr/local/bin/python2.7 /usr/local/bin/python;;
@@ -132,11 +136,12 @@ function ocf
 
 function rm
 {
-	if [ -e "$HOME/bin/rm" ]; then 
+	local therm
+	if [ -e "$HOME/bin/rm" ]; then
 		therm="$HOME/bin/rm"
-	else 
+	else
 		therm="/bin/rm"
-	fi 
+	fi
 	eval $therm "$@"
 }
 
@@ -147,8 +152,6 @@ function cs
 	pushd . >/dev/null
 	\cd -P "$@" && ls --group-directories-first
 }
-
-
 
 # define custom colors for ls
 eval `dircolors ~/.dircolors`
