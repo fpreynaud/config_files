@@ -72,6 +72,27 @@ bgwhite="\[\033[47m\]"
 bold="\[\e[1m\]"
 nocol="\[\e[0m\]"
 
+function is_git_repository()
+{
+	local path=$PWD
+
+	if [ -d "$path/.git" ]; then
+		echo 1
+		return 1
+	else
+		while [ "$(realpath $path)" != "/" ]
+		do
+			if [ -d "$path/.git" ]; then
+				echo 1
+				return 1
+			fi
+			path=$path/..
+		done
+	fi
+	echo 0
+	return 0
+}
+
 function run_on_prompt()
 {
 	local userHost="$bgblue[\u@\h \W]";
@@ -82,11 +103,11 @@ function run_on_prompt()
 		_jobs="$bgyellow[$nJobs]";
 	fi
 	local currentBranch='';
-	if [ -d .git ]; then
+	if [ "$(is_git_repository)" -eq 1 ]; then
 		local branchName="$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')";
 		currentBranch="$bggreen[$branchName]";
 	fi;
-	PS1="$white$bold$userHost$_jobs$currentBranch$bgwhite$black[\!]$nocol " # [user@host workingDirectory][backGroundJobsCount][currentGitBranch][nextCommandHistoryNumber]
+	PS1="\n$white$bold$userHost$_jobs$currentBranch$bgwhite$black[\!]$nocol " # [user@host workingDirectory][backGroundJobsCount][currentGitBranch][nextCommandHistoryNumber]
 	local lastCommand=$(history 1|sed s/"\(\s\+\)"/" "/g|cut -f5- -d " ")
 	if [ "$lastCommand" != "$PERSISTENT_HISTORY_LAST" ]; then
 		echo $lastCommand >> ~/.persistent_history
