@@ -38,21 +38,50 @@ bgwhite="\[\033[47m\]"
 bold="\[\e[1m\]"
 nocol="\[\e[0m\]"
 
-PROMPT_COMMAND="\
-	userHost=\"\$bgblue[\u@\h \W]\";\
-	echo -e \"\033]2;\${USER}@\${HOSTNAME}:\${PWD/#\$HOME/~}\007\";\
-	_jobs='';\
-	nJobs=\$(jobs|wc -l);\
-	if [ \"\$nJobs\" -gt 0 ]; then\
-		_jobs=\"\$bgyellow[\$nJobs]\";\
+function is_git_repository()
+{
+	local path=$PWD
+
+	if [ -d "$path/.git" ]; then
+		echo 1
+		return 1
+	else
+		while [ "$(realpath $path)" != "/" ]
+		do
+			if [ -d "$path/.git" ]; then
+				echo 1
+				return 1
+			fi
+			path=$path/..
+		done
 	fi
-	currentBranch='';\
-	branches=\$(git branch --no-color 2>/dev/null);\
-	if [ -n \"\$branches\" ]; then\
-		branchName=\"\$(git branch --no-color 2>/dev/null|\grep '*'|cut -f 2 -d ' ')\";\
-		currentBranch=\"\$bggreen[\$branchName]\";\
+	echo 0
+	return 0
+}
+
+function run_on_prompt()
+{
+	local userHost="$bgblue[\u@\h \W]";
+	#echo -e "\033]2;${USER}@${HOSTNAME}:${PWD/#$HOME/\~}"; #Set window title
+	local _jobs='';
+	local nJobs=$(jobs|wc -l);
+	if [ "$nJobs" -gt 0 ]; then
+		_jobs="$bgyellow[$nJobs]";
 	fi
-	PS1=\"\$white\$bold\$userHost\$_jobs\$currentBranch\$nocol \";"
+	local currentBranch='';
+	if [ "$(is_git_repository)" -eq 1 ]; then
+		local branchName="$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')";
+		currentBranch="$bggreen[$branchName]";
+	fi;
+	PS1="\n$white$bold$userHost$_jobs$currentBranch$bgwhite$black[\!]$nocol " # [user@host workingDirectory][backGroundJobsCount][currentGitBranch][nextCommandHistoryNumber]
+	local lastCommand=$(history 1|sed s/"\(\s\+\)"/" "/g|cut -f5- -d " ")
+	if [ "$lastCommand" != "$PERSISTENT_HISTORY_LAST" ]; then
+		echo $lastCommand >> ~/.persistent_history
+		export PERSISTENT_HISTORY_LAST=$lastCommand
+	fi
+}
+
+PROMPT_COMMAND="run_on_prompt"
 
 # exports
 export HISTTIMEFORMAT='%d/%m/%y %H:%M '
@@ -78,7 +107,7 @@ export LESS="--RAW-CONTROL-CHARS"
 #
 function pyv
 {
-	version=$(python --version |& \grep -o "[0-9]\.[0-9]")	
+	local version=$(python --version |& \grep -o "[0-9]\.[0-9]")
 	case $version in
 		2.7) ln -sf /usr/local/bin/python2.6 /usr/local/bin/python;;
 		2.6) ln -sf /usr/local/bin/python2.7 /usr/local/bin/python;;
@@ -94,11 +123,12 @@ function ocf
 
 function rm
 {
-	if [ -e "$HOME/bin/rm" ]; then 
+	local therm
+	if [ -e "$HOME/bin/rm" ]; then
 		therm="$HOME/bin/rm"
-	else 
+	else
 		therm="/bin/rm"
-	fi 
+	fi
 	eval $therm "$@"
 }
 
@@ -147,3 +177,4 @@ pydoc ()
 {
 	python -c "import $1;help($1)"
 }
+shopt -s histverify lithist xpg_echo

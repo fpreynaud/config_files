@@ -12,6 +12,7 @@ alias ac='apt-cache'
 alias as='apt-cache search'
 alias ag='sudo apt-get'
 
+alias cd='cs'
 alias cdd='popd'
 alias cim='vim'
 alias clntex='/bin/rm *.out *.aux *.log'
