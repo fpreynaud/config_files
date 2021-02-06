@@ -1,5 +1,18 @@
 # .bashrc
 
+# User specific aliases and functions
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -45,7 +58,6 @@ fi
 # sources /etc/bash.bashrc).
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
-fi
 
 # My part ######################################################################################################
 
@@ -174,6 +186,16 @@ function cs
 	\cd -P "$@" && ls --group-directories-first
 }
 
+function findcommit
+{
+	git log --branches=* --oneline -i --grep="$1" --pretty=format:"%H %s" | cat
+}
+
+. ~/.aliases
+export http_proxy=http://www-cache-nrs.si.fr.intraorange:3128
+export https_proxy=http://www-cache-nrs.si.fr.intraorange:3128
+
+
 # define custom colors for ls
 eval `dircolors ~/.dircolors`
 
@@ -190,5 +212,19 @@ function startnetwork
 	fi
 }
 
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:.
+export PATH=/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/root/bin:.
+source /etc/bash_completion.d/git
+
+superpopd () 
+{ 
+    for n in $(seq 0 $1);
+    do
+        \popd -n;
+    done
+}
+
+pydoc ()
+{
+	python -c "import $1;help($1)"
+}
 shopt -s histverify lithist xpg_echo
