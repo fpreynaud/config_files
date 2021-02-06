@@ -123,7 +123,7 @@ export trash=~/.local/share/Trash/files
 
 # colors for less
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
-export LESS_TERMCAP_md=$(tput bold; tput setaf 8)
+export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
 export LESS_TERMCAP_me=$(tput sgr0)
 export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4)
 export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
@@ -180,11 +180,15 @@ eval `dircolors ~/.dircolors`
 # Enable autocd
 shopt -s autocd
 
-# Start network if OS is Kali
-if [ -e "/etc/os-release" ] && [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; then
-	ifconfig eth0 up
-	dhclient eth0
-	service smbd start
-fi
+function startnetwork
+{
+	# Start network if OS is Kali
+	if [ -e "/etc/os-release" ] && [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; then
+		ifconfig eth0 up
+		#dhclient -v eth0
+		service smbd start
+	fi
+}
+
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:.
 shopt -s histverify lithist xpg_echo
