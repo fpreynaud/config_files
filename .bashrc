@@ -221,20 +221,5 @@ array_append(){
 	fi
 }
 
-array_pop(){
-	local -n array=$1
-	local let length=${#array[*]}
-	local keys="${!array[@]}"
-	local ret=''
-
-	if [ $length -eq 0 ]
-	then
-		echo $ret
-	else
-		local let lastKey=$(echo $keys|cut -f$length -d' ')
-		ret=${array[$lastKey]}
-		unset array[$lastKey]
-		echo $ret
-	fi
-}
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:.
 shopt -s histverify lithist xpg_echo
