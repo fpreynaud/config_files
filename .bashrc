@@ -220,3 +220,34 @@ function findcommit
 {
 	git log --branches=* --oneline -i --grep="$1" --pretty=format:"%H %s" | cat
 }
+
+array_append(){
+	local -n array=$1
+	local let length=${#array[*]}
+	local keys="${!array[@]}"
+	if [ $length -eq 0 ]
+	then
+		array[0]=$2
+	else
+		local let lastKey=$(echo $keys|cut -f$length -d' ')
+		array[lastKey+1]="$2"
+	fi
+}
+
+array_pop(){
+	local -n array=$1
+	local let length=${#array[*]}
+	local keys="${!array[@]}"
+	local ret=''
+
+	if [ $length -eq 0 ]
+	then
+		echo $ret
+	else
+		local let lastKey=$(echo $keys|cut -f$length -d' ')
+		ret=${array[$lastKey]}
+		unset array[$lastKey]
+		echo $ret
+	fi
+}
+shopt -s histverify lithist xpg_echo
