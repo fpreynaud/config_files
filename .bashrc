@@ -58,6 +58,7 @@ fi
 # sources /etc/bash.bashrc).
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
+fi
 
 # My part ######################################################################################################
 
@@ -192,8 +193,8 @@ function findcommit
 }
 
 . ~/.aliases
-export http_proxy=http://www-cache-nrs.si.fr.intraorange:3128
-export https_proxy=http://www-cache-nrs.si.fr.intraorange:3128
+#export http_proxy=http://www-cache-nrs.si.fr.intraorange:3128
+#export https_proxy=http://www-cache-nrs.si.fr.intraorange:3128
 
 
 # define custom colors for ls
@@ -226,5 +227,35 @@ superpopd ()
 pydoc ()
 {
 	python -c "import $1;help($1)"
+}
+
+array_append(){
+	local -n array=$1
+	local let length=${#array[*]}
+	local keys="${!array[@]}"
+	if [ $length -eq 0 ]
+	then
+		array[0]=$2
+	else
+		local let lastKey=$(echo $keys|cut -f$length -d' ')
+		array[lastKey+1]="$2"
+	fi
+}
+
+array_pop(){
+	local -n array=$1
+	local let length=${#array[*]}
+	local keys="${!array[@]}"
+	local ret=''
+
+	if [ $length -eq 0 ]
+	then
+		echo $ret
+	else
+		local let lastKey=$(echo $keys|cut -f$length -d' ')
+		ret=${array[$lastKey]}
+		unset array[$lastKey]
+		echo $ret
+	fi
 }
 shopt -s histverify lithist xpg_echo
