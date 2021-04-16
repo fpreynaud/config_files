@@ -72,17 +72,32 @@ bgwhite="\[\033[47m\]"
 bold="\[\e[1m\]"
 nocol="\[\e[0m\]"
 
+function is_in_git_repository()
+{
+	local result=0
+	local dir=$(realpath $PWD)
+	while [ "$dir" != "/" ]; do
+		if [ -d "$dir/.git" ]; then
+			result=1
+		fi
+		dir=$(realpath $dir/..)
+	done
+	echo $result
+}
+
 function run_on_prompt()
 {
 	local userHost="$bgblue[\u@\h \W]";
 	#echo -e "\033]2;${USER}@${HOSTNAME}:${PWD/#$HOME/\~}"; #Set window title
 	local _jobs='';
 	local nJobs=$(jobs|wc -l);
+	local isGit=$(is_in_git_repository)
+
 	if [ "$nJobs" -gt 0 ]; then
 		_jobs="$bgyellow[$nJobs]";
 	fi
 	local currentBranch='';
-	if [ -d .git ]; then
+	if [ $isGit -eq 1 ]; then
 		local branchName="$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')";
 		currentBranch="$bggreen[$branchName]";
 	fi;
@@ -102,7 +117,7 @@ export trash=~/.local/share/Trash/files
 
 # colors for less
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
-export LESS_TERMCAP_md=$(tput bold; tput setaf 8)
+export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
 export LESS_TERMCAP_me=$(tput sgr0)
 export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4)
 export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
@@ -160,10 +175,13 @@ eval `dircolors ~/.dircolors`
 shopt -s autocd
 
 # Start network if OS is Kali
-if [ -e "/etc/os-release" ] && [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; then
-	ifconfig eth0 up
-	dhclient eth0
-	service smbd start
-fi
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:.
+#if [ -e "/etc/os-release" ] && [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; then
+	#ifconfig eth0 up
+	#dhclient eth0
+	#service smbd start
+#fi
+export GOPATH=$HOME/go
+export GOROOT=/usr/local/go
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$GOROOT/bin:$GOPATH/bin:.
 shopt -s histverify lithist xpg_echo
+
