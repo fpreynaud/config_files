@@ -130,45 +130,32 @@ bgwhite="\[\033[47m\]"
 bold="\[\e[1m\]"
 nocol="\[\e[0m\]"
 
-function is_git_repository()
+function is_in_git_repository()
 {
-	local path=$PWD
-
-	if [ -d "$path/.git" ]; then
-		echo 1
-		return 1
-	else
-		while [ "$(realpath $path)" != "/" ]
-		do
-			if [ -d "$path/.git" ]; then
-				echo 1
-				return 1
-			fi
-			path=$path/..
-		done
-	fi
-	echo 0
-	return 0
+	local result=0
+	local dir=$(realpath $PWD)
+	while [ "$dir" != "/" ]; do
+		if [ -d "$dir/.git" ]; then
+			result=1
+		fi
+		dir=$(realpath $dir/..)
+	done
+	echo $result
 }
 
 function run_on_prompt()
 {
-	local _jobs=''
-	local nJobs=$(jobs|wc -l)
-	local gitBranch=''
-	local symbol='@'
-	local prompt_color="$green"
-
-	if [ "$EUID" -eq 0 ]; then
-		symbol=$(printf "\U1F480")
-		prompt_color="$red"
-	fi
+	local userHost="$bgblue[\u@\h \W]";
+	#echo -e "\033]2;${USER}@${HOSTNAME}:${PWD/#$HOME/\~}"; #Set window title
+	local _jobs='';
+	local nJobs=$(jobs|wc -l);
+	local isGit=$(is_in_git_repository)
 
 	if [ "$nJobs" -gt 0 ]; then
-		_jobs="─[${bgred}${bold}${white}${nJobs}${nocol}${prompt_color}]"
+		_jobs="$bgyellow[$nJobs]";
 	fi
-
-	if [ "$(is_git_repository)" -eq 1 ]; then
+	local currentBranch='';
+	if [ $isGit -eq 1 ]; then
 		local branchName="$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')";
 		gitBranch="─[${bggreen}${white}${bold}${branchName}${nocol}${prompt_color}]"
 	fi;
