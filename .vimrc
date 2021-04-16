@@ -1,5 +1,9 @@
 "Options"
 """""""""
+"Enable flag g by default in :substitute
+"Highlight cursor column
+set gdefault
+set cursorcolumn
 
 "Ignore case in search patterns
 "Display line numbers
@@ -63,6 +67,9 @@ inoremap JK <ESC>
 
 "Normal mode mappings"
 """"""""""""""""""""""
+
+"Repeat last command
+"nnoremap ::: :<Up><CR>
 
 "Scroll up/down and leave cursor on same line
 nnoremap <M-Up> <c-Y>gk
@@ -145,15 +152,13 @@ nnoremap <leader>" I"<ESC>j
 nnoremap <leader># I#<ESC>j
 
 "<CR> inserts newline in normal mode
-nnoremap <CR> o<ESC>
-
-"When jumping to next occurence, put it in the middle of the screen
-nnoremap n nzz
+"nnoremap <CR> o<ESC>
 
 "Adapt QWERTY commands for AZERTY keyboards
 nnoremap à 0
 nnoremap é ~
 nnoremap ; .
+nnoremap ! ;
 nnoremap ù %
 
 "Visual mode mappings"
@@ -193,104 +198,104 @@ autocmd FileType {c,cpp} :set cc=79
 
 "C++-specific autocommands
 "Write minimal C++ code
-autocmd Bufnewfile *.cpp :0r ~/.vim/minCpp.cpp
+"autocmd Bufnewfile *.cpp :0r ~/.vim/minCpp.cpp
 
 
 "Defines mappings for .tex documents
 function! Maps_tex ()
-	if &ft != 'tex' && &ft != 'plaintex'
-		return
-	endif
+    if &ft != 'tex' && &ft != 'plaintex'
+        return
+    endif
 
-	"Make '_' be counted as part of words
-	set iskeyword+=_
+    "Make '_' be counted as part of words
+    set iskeyword+=_
 
-	set tw=80
+    set tw=80
 
-	"En-tête
-	inoreabbr <buffer> usepackages \documentclass[a4paper]{article}<CR>\usepackage[utf8]{inputenc}<CR>\usepackage[T1]{fontenc}<CR>\%\usepackage[francais]{babel}<CR>%\usepackage[left=1cm, bottom=1cm, top=0.5cm, right=1cm]{geometry}<CR>\usepackage{color}<CR>%\usepackage{graphicx}
-	inoreabb <buffer> colortitles \definecolor{turquoise}{rgb}{.17,.97,.7}<CR> \definecolor{vert}{rgb}{.17,.97,.34}<CR> \newcommand{\cpart}[1]{\part{\textcolor{blue}{#1}}}<CR> \newcommand{\csection}[1]{\section{\textcolor{turquoise}{#1}}}<CR> \newcommand{\csubsection}[1]{\subsection{\textcolor{vert}{#1}}}
+    "En-tête
+    inoreabbr <buffer> usepackages \documentclass[a4paper]{article}<CR>\usepackage[utf8]{inputenc}<CR>\usepackage[T1]{fontenc}<CR>\%\usepackage[francais]{babel}<CR>%\usepackage[left=1cm, bottom=1cm, top=0.5cm, right=1cm]{geometry}<CR>\usepackage{color}<CR>%\usepackage{graphicx}
+    inoreabb <buffer> colortitles \definecolor{turquoise}{rgb}{.17,.97,.7}<CR> \definecolor{vert}{rgb}{.17,.97,.34}<CR> \newcommand{\cpart}[1]{\part{\textcolor{blue}{#1}}}<CR> \newcommand{\csection}[1]{\section{\textcolor{turquoise}{#1}}}<CR> \newcommand{\csubsection}[1]{\subsection{\textcolor{vert}{#1}}}
 
-	"Sections & paragraphs mappings
-	inoremap <buffer> <leader>cpart \cpart{}<Left>
-	inoremap <buffer> <leader>csec \csection{}<Left>
-	inoremap <buffer> <leader>csub \csubsection{}<Left>
-	inoremap <buffer> <leader>cssub \csubsubsection{}<Left>
-	inoremap <buffer> <leader>part \part{}<Left>
-	inoremap <buffer> <leader>sec \section{}<Left>
-	inoremap <buffer> <leader>sub \subsection{}<Left>
-	inoremap <buffer> <leader>ssub \subsubsection{}<Left>
-	inoremap <buffer> <leader>par \paragraph{}<Left>
-	inoremap <buffer> <leader>spar \subparagraph{}<Left>
+    "Sections & paragraphs mappings
+    inoremap <buffer> <leader>cpart \cpart{}<Left>
+    inoremap <buffer> <leader>csec \csection{}<Left>
+    inoremap <buffer> <leader>csub \csubsection{}<Left>
+    inoremap <buffer> <leader>cssub \csubsubsection{}<Left>
+    inoremap <buffer> <leader>part \part{}<Left>
+    inoremap <buffer> <leader>sec \section{}<Left>
+    inoremap <buffer> <leader>sub \subsection{}<Left>
+    inoremap <buffer> <leader>ssub \subsubsection{}<Left>
+    inoremap <buffer> <leader>par \paragraph{}<Left>
+    inoremap <buffer> <leader>spar \subparagraph{}<Left>
 
-	"Lists mappings
-	inoremap <buffer> <leader>item \begin{itemize}<CR><Tab><CR><BS>\end{itemize}<ESC>ka
-	inoremap <buffer> <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item
-	inoremap <buffer> <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item
-	inoremap <buffer> <leader>- \item~
-	inoremap <buffer> <leader>p- \item[$\bullet$]
+    "Lists mappings
+    inoremap <buffer> <leader>item \begin{itemize}<CR><Tab><CR><BS>\end{itemize}<ESC>ka
+    inoremap <buffer> <leader>desc \begin{description}<CR><Tab><CR><BS>\end{description}<Up><Right>\item
+    inoremap <buffer> <leader>enum \begin{enumerate}<CR><Tab><CR><BS>\end{enumerate}<Up><Right>\item
+    inoremap <buffer> <leader>- \item~
+    inoremap <buffer> <leader>p- \item[$\bullet$]
 
-	"Environments mappings
-	inoremap <buffer> <leader>beg \begin{}<CR>\end{}<Up><Right><Right><CR><Tab><Up><Right><Right><Right>
-	inoremap <buffer> <leader>\[ \[\]<Left><Left><CR><CR><Up><Tab><Right>
-	inoremap <buffer> <leader>tabular \begin{tabular}{\|\|}<CR><Tab><CR><BS>\end{tabular}<Up>
-	inoremap <buffer> <leader>matrix \left(\begin{tabular}{}<CR><Tab><CR><BS>\end{tabular}\right)<Up>
+    "Environments mappings
+    inoremap <buffer> <leader>beg \begin{}<CR>\end{}<Up><Right><Right><CR><Tab><Up><Right><Right><Right>
+    inoremap <buffer> <leader>\[ \[\]<Left><Left><CR><CR><Up><Tab><Right>
+    inoremap <buffer> <leader>tabular \begin{tabular}{\|\|}<CR><Tab><CR><BS>\end{tabular}<Up>
+    inoremap <buffer> <leader>matrix \left(\begin{tabular}{}<CR><Tab><CR><BS>\end{tabular}\right)<Up>
 
-	"Other mappings
-	inoremap <buffer> <leader>emp \emph{}<Left>
-	inoremap <buffer> <leader>tbs \textbackslash{}
-	inoremap <buffer> _ \
-	inoremap <buffer> \ _
+    "Other mappings
+    inoremap <buffer> <leader>emp \emph{}<Left>
+    inoremap <buffer> <leader>tbs \textbackslash{}
+    inoremap <buffer> _ \
+    inoremap <buffer> \ _
 
-	nnoremap <buffer> <C-C> :!make<CR>
+    nnoremap <buffer> <C-C> :!make<CR>
 endfunction
 
 "Customizes the way information is displayed in tab line
 function! SetTabLine()
-	let s = ''
+    let s = ''
 
-	"Loop accross all tabs
-	for i in range(tabpagenr('$'))
-		let tabpage = i + 1
-		"If the tabpage is the current tabpage use highlight
-		"group for selected tab
-		if tabpage == tabpagenr()
-			let s .= '%#TabLineSel#'
-		"If the tabpage is not the current tabpage use
-		"highlight group for unselected tab
-		else
-			let s .= '%#TabLine#'
-		endif
+    "Loop accross all tabs
+    for i in range(tabpagenr('$'))
+        let tabpage = i + 1
+        "If the tabpage is the current tabpage use highlight
+        "group for selected tab
+        if tabpage == tabpagenr()
+            let s .= '%#TabLineSel#'
+        "If the tabpage is not the current tabpage use
+        "highlight group for unselected tab
+        else
+            let s .= '%#TabLine#'
+        endif
 
-		let s .= '%' . tabpage . 'T'
+        let s .= '%' . tabpage . 'T'
 
-	    " the label is made by MyTabLabel()
-	let s .= '[' . tabpage . ': %{MyTabLabel(' . tabpage . ')} ]'
-	  endfor
+    " the label is made by MyTabLabel()
+    let s .= '[' . tabpage . ': %{MyTabLabel(' . tabpage . ')} ]'
+      endfor
 
-	  " after the last tab fill with TabLineFill and reset tab page nr
-	  let s .= '%#TabLineFill#%T'
+      " after the last tab fill with TabLineFill and reset tab page nr
+      let s .= '%#TabLineFill#%T'
 
-	  " right-align the label to close the current tab page
-	  if tabpagenr('$') > 1
-	    let s .= '%=%#TabLine#%999XX'
-	  endif
+      " right-align the label to close the current tab page
+      if tabpagenr('$') > 1
+        let s .= '%=%#TabLine#%999XX'
+      endif
 
-	  return s
+      return s
 endfunction
 
 function! MyTabLabel(n)
-	let buflist = tabpagebuflist(a:n)
-	let winnr = tabpagewinnr(a:n)
-	let label = fnamemodify(bufname(buflist[winnr - 1]), ':t')
-	if getbufvar(buflist[winnr - 1], "&mod") == 1
-		let label = '[+]' . label
-	endif
-	return label
+    let buflist = tabpagebuflist(a:n)
+    let winnr = tabpagewinnr(a:n)
+    let label = fnamemodify(bufname(buflist[winnr - 1]), ':t')
+    if getbufvar(buflist[winnr - 1], "&mod") == 1
+        let label = '[+]' . label
+    endif
+    return label
 endfunction
 
 " User-defined commands "
 """""""""""""""""""""""""
 
-command! Changeindentstyle set expandtab! smarttab!
+command! Changeindentstyle set expandtab! smarttab!|retab
 command! -nargs=? -complete=buffer Vsb vert sb <args>

@@ -2,19 +2,39 @@
 	email = francois.p.reynaud@gmail.com
 	name = François REYNAUD
 
+[credential]
+	helper = cache --timeout 7200
+
 [credential "https://github.com"]
+	username = fpreynaud
+
+[credential "https://bitbucket.org"]
 	username = fpreynaud
 
 [core]
 	editor = vim
+	whitespace = -blank-at-eol
 
 [alias]
-	logd = log --decorate=full
-	tree = log --graph --decorate --oneline --branches
+	logd = log --decorate=full --color=always
+	last = log -1
+	tree = log --graph --decorate --oneline --branches=* --color=always
 	diffl = diff HEAD^
+	dif = diff --color=always --ignore-space-at-eol
 	index = ls-files
 	st = status
-	last = log -1
+	repoconf = config -l -f .git/config
+	newbranch = checkout -b
+	worddiff = diff --color-words --color=always
+	co = git checkout
+	hist = log --format=format:\"%C(yellow)commit %H %gD%nAuthor: %aN <%aE>%nDate: %aD%n%n%s%n%n%b\" -g
+	discard = reset --hard HEAD
 
 [push]
 	default = matching
+
+[color]
+	status = always
+	interactive = always
+	diff = always
+	branch = always
