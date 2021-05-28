@@ -196,8 +196,6 @@ export LESS_TERMCAP_ZW=$(tput rsupm)
 export LESS="--RAW-CONTROL-CHARS"
 
 # functions
-
-
 # go into dir and list its contents immediatly
 function cs
 {
