@@ -153,19 +153,33 @@ function is_git_repository()
 
 function run_on_prompt()
 {
-	local userHost="$bgblue[\u@\h \W]";
-	#echo -e "\033]2;${USER}@${HOSTNAME}:${PWD/#$HOME/\~}"; #Set window title
-	local _jobs='';
-	local nJobs=$(jobs|wc -l);
-	if [ "$nJobs" -gt 0 ]; then
-		_jobs="$bgyellow[$nJobs]";
+	local _jobs=''
+	local nJobs=$(jobs|wc -l)
+	local gitBranch=''
+	local symbol='@'
+	local prompt_color="$green"
+
+	if [ "$EUID" -eq 0 ]; then
+		symbol=$(printf "\U1F480")
+		prompt_color="$red"
 	fi
-	local currentBranch='';
+
+	if [ "$nJobs" -gt 0 ]; then
+		_jobs="─[${bgred}${bold}${white}${nJobs}${nocol}${prompt_color}]"
+	fi
+
 	if [ "$(is_git_repository)" -eq 1 ]; then
 		local branchName="$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')";
-		currentBranch="$bggreen[$branchName]";
+		gitBranch="─[${bggreen}${white}${bold}${branchName}${nocol}${prompt_color}]"
 	fi;
-	PS1="\n$white$bold$userHost$_jobs$currentBranch$bgwhite$black[\!]$nocol " # [user@host workingDirectory][backGroundJobsCount][currentGitBranch][nextCommandHistoryNumber]
+
+	local identity="${blue}${bold}\u ${symbol} \h${prompt_color}"
+	local workingDir="${nocol}\w${prompt_color}"
+
+	PS1="$prompt_color\
+┌─(${identity})─[${workingDir}]${gitBranch}${_jobs}
+└─${nocol}\$ "
+
 	local lastCommand=$(history 1|sed s/"\(\s\+\)"/" "/g|cut -f5- -d " ")
 	if [ "$lastCommand" != "$PERSISTENT_HISTORY_LAST" ]; then
 		echo $lastCommand >> ~/.persistent_history
@@ -195,9 +209,8 @@ export LESS_TERMCAP_ZW=$(tput rsupm)
 export LESS="--RAW-CONTROL-CHARS"
 
 # functions
-#
 
-# cs [dir]
+
 # go into dir and list its contents immediatly
 function cs
 {
@@ -210,66 +223,6 @@ function findcommit
 	git log --branches=* --oneline -i --grep="$1" --pretty=format:"%H %s" | cat
 }
 
-function startapp(){
-	nohup "$@" &>/dev/null & disown %
-}
-
-function compgen_ignorecase(){
-	IFS=$'\n'
-	wordlist="$1"
-	currentWord="${2#\'}"
-
-	# Display all possible completions by default
-	COMPREPLY=($wordlist)
-
-	if [ -n "$currentWord" ]; then
-		COMPREPLY=()
-
-		# Save state of nocasematch shell option
-		shCaseMatch=
-		shopt -q nocasematch || shCaseMatch=1 
-
-		# Switch nocasematch on for case-insensitive pattern matching
-		shopt -s nocasematch
-
-		# Filter on possible completions that match with the current word
-		for possibleCompletion in $wordlist
-		do
-			if [[ "$possibleCompletion" =~ ^$currentWord ]]; then
-				COMPREPLY+=("${possibleCompletion}")
-			fi
-		done
-
-		# Restore state of nocasematch
-		[ -n $shCaseMatch ] && shopt -u nocasematch
-	fi
-
-	# Quote the completions
-	let i=0
-	for completion in "${COMPREPLY[@]}"
-	do
-		COMPREPLY[$i]="${completion@Q}"
-		let i=i+1
-	done
-
-}
-
-function comp_vms(){
-	# Get list of vms using vboxmanage
-	local vmNames=$(vboxmanage list vms | awk -F '"' '{print $2}')
-
-	# Perform case-insensitive completion
-	compgen_ignorecase "$vmNames" "${COMP_WORDS[COMP_CWORD]}"
-}
-
-function vm(){
-	for machine in "$@"
-	do
-		vboxmanage startvm "$machine"&
-	done
-}
-
-complete -F comp_vms vm
 array_append(){
 	local -n array=$1
 	local let length=${#array[*]}
