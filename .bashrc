@@ -1,18 +1,5 @@
 # .bashrc
 
-# User specific aliases and functions
-
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-# If not running interactively, don't do anything
-[ -z "$PS1" ] && return
-
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -30,14 +17,6 @@ HISTFILESIZE=2000
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
 
 # enable color support of ls
 if [ -x /usr/bin/dircolors ]; then
@@ -108,19 +87,33 @@ function is_git_repository()
 
 function run_on_prompt()
 {
-	local userHost="$bgblue[\u@\h \W]";
-	#echo -e "\033]2;${USER}@${HOSTNAME}:${PWD/#$HOME/\~}"; #Set window title
-	local _jobs='';
-	local nJobs=$(jobs|wc -l);
-	if [ "$nJobs" -gt 0 ]; then
-		_jobs="$bgyellow[$nJobs]";
+	local _jobs=''
+	local nJobs=$(jobs|wc -l)
+	local gitBranch=''
+	local symbol='@'
+	local prompt_color="$green"
+
+	if [ "$EUID" -eq 0 ]; then
+		symbol=$(printf "\U1F480")
+		prompt_color="$red"
 	fi
-	local currentBranch='';
+
+	if [ "$nJobs" -gt 0 ]; then
+		_jobs="─[${bgred}${bold}${white}${nJobs}${nocol}${prompt_color}]"
+	fi
+
 	if [ "$(is_git_repository)" -eq 1 ]; then
 		local branchName="$(git branch --no-color|\grep '*'|cut -f 2 -d ' ')";
-		currentBranch="$bggreen[$branchName]";
+		gitBranch="─[${bggreen}${white}${bold}${branchName}${nocol}${prompt_color}]"
 	fi;
-	PS1="\n$white$bold$userHost$_jobs$currentBranch$bgwhite$black[\!]$nocol " # [user@host workingDirectory][backGroundJobsCount][currentGitBranch][nextCommandHistoryNumber]
+
+	local identity="${blue}${bold}\u ${symbol} \h${prompt_color}"
+	local workingDir="${nocol}\w${prompt_color}"
+
+	PS1="$prompt_color\
+┌─(${identity})─[${workingDir}]${gitBranch}${_jobs}
+└─${nocol}\$ "
+
 	local lastCommand=$(history 1|sed s/"\(\s\+\)"/" "/g|cut -f5- -d " ")
 	if [ "$lastCommand" != "$PERSISTENT_HISTORY_LAST" ]; then
 		echo $lastCommand >> ~/.persistent_history
@@ -151,22 +144,6 @@ export LESS_TERMCAP_ZW=$(tput rsupm)
 export LESS="--RAW-CONTROL-CHARS"
 
 # functions
-#
-function pyv
-{
-	local version=$(python --version |& \grep -o "[0-9]\.[0-9]")
-	case $version in
-		2.7) ln -sf /usr/local/bin/python2.6 /usr/local/bin/python;;
-		2.6) ln -sf /usr/local/bin/python2.7 /usr/local/bin/python;;
-	esac
-	echo $(python --version)
-}
-
-# "Go to directory containing the file" function (ocf = 'Open Containing Folder')
-function ocf
-{
-	cd $(dirname `readlink -e $1`)
-}
 
 function rm
 {
@@ -193,25 +170,12 @@ function findcommit
 }
 
 . ~/.aliases
-#export http_proxy=http://www-cache-nrs.si.fr.intraorange:3128
-#export https_proxy=http://www-cache-nrs.si.fr.intraorange:3128
-
 
 # define custom colors for ls
 eval `dircolors ~/.dircolors`
 
 # Enable autocd
 shopt -s autocd
-
-function startnetwork
-{
-	# Start network if OS is Kali
-	if [ -e "/etc/os-release" ] && [ -n "$(grep "NAME=\"Kali" /etc/os-release)" ]; then
-		ifconfig eth0 up
-		#dhclient -v eth0
-		service smbd start
-	fi
-}
 
 export PATH=/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/root/bin:.
 source /etc/bash_completion.d/git
@@ -224,38 +188,4 @@ superpopd ()
     done
 }
 
-pydoc ()
-{
-	python -c "import $1;help($1)"
-}
-
-array_append(){
-	local -n array=$1
-	local let length=${#array[*]}
-	local keys="${!array[@]}"
-	if [ $length -eq 0 ]
-	then
-		array[0]=$2
-	else
-		local let lastKey=$(echo $keys|cut -f$length -d' ')
-		array[lastKey+1]="$2"
-	fi
-}
-
-array_pop(){
-	local -n array=$1
-	local let length=${#array[*]}
-	local keys="${!array[@]}"
-	local ret=''
-
-	if [ $length -eq 0 ]
-	then
-		echo $ret
-	else
-		local let lastKey=$(echo $keys|cut -f$length -d' ')
-		ret=${array[$lastKey]}
-		unset array[$lastKey]
-		echo $ret
-	fi
-}
 shopt -s histverify lithist xpg_echo
