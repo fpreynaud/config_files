@@ -15,7 +15,7 @@ alias irc='ssh reynaud2012@perso.iiens.net'
 
 alias jobs='jobs -l'
 
-alias ls='ls --color=auto --group-directories-first'
+alias ls='ls --group-directories-first --color=always'
 alias la='ls -A'
 alias sba='. ~/.bash_aliases'
 alias sbrc='. ~/.bashrc'
