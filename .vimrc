@@ -3,7 +3,7 @@
 "Enable flag g by default in :substitute
 "Highlight cursor column
 set gdefault
-set cursorcolumn
+"set cursorcolumn
 
 "Ignore case in search patterns
 "Display line numbers
