@@ -38,8 +38,9 @@ set formatoptions=tcqro
 "Make Vim adapt syntax highlighting for dark background
 "C indent
 "Display fold column
+"Set guicolors
 set background=dark cinoptions="" 
-set foldcolumn=2
+set foldcolumn=2 termguicolors
 
 "Tabs are of the form [tabpagenumber: modified_flag filename |]
 "Set maximum nesting level for 'indent' and 'syntax' foldmethods
@@ -139,9 +140,6 @@ nnoremap + :m .+1<CR>
 "Move to previous or next tab page
 nnoremap <M-Left> gT
 nnoremap <M-Right> gt
-
-"Alias for CTRL-I, because CTRL-I is now :tabn<CR>
-nnoremap <C-Y> <C-I>
 
 "Edit and load vim configuration
 nnoremap <leader>ev :vsp $MYVIMRC<CR>
