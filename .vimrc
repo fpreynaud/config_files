@@ -1,14 +1,22 @@
 "Options"
 """""""""
+"Make :grep act as :vimgrep
+set grepprg=internal
+
 "Enable flag g by default in :substitute
-"Highlight cursor column
 set gdefault
+
+"Highlight cursor column
 "set cursorcolumn
 
 "Ignore case in search patterns
+set ignorecase
+
 "Display line numbers
+set number 
+
 "Show partial command in status line
-set ignorecase number showcmd
+set showcmd
 
 "Enable incremental search
 "Change working directory automatically when editing a file
@@ -50,6 +58,8 @@ highlight TabLineFill cterm=NONE ctermbg=0
 
 "Enable syntax highlighting
 syntax on
+
+let g:markdown_fenced_languages = ['python', 'sh']
 
 "Miscellaneous"
 """""""""""""""
@@ -178,9 +188,10 @@ autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.tex :call Maps_tex()
 autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.md :set syntax=markdown
 "Use Java syntax highlighting for .pde files
 autocmd Bufnewfile,bufread *.pde :set syn=java
-
 "Use Prolog syntax highlighting for .P files
 autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.P :source $VIMRUNTIME/syntax/prolog.vim
+"Use fish syntax highlighting for .fish files
+autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.fish :set syntax=fish
 
 "Autocommands common to C and C++
 "Enable cindent
