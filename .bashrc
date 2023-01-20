@@ -180,7 +180,7 @@ export trash=~/.local/share/Trash/files
 
 # colors for less
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
-export LESS_TERMCAP_md=$(tput bold; tput setaf 8)
+export LESS_TERMCAP_md=$(tput bold; tput setaf 3)
 export LESS_TERMCAP_me=$(tput sgr0)
 export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4)
 export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
@@ -209,3 +209,64 @@ function findcommit
 {
 	git log --branches=* --oneline -i --grep="$1" --pretty=format:"%H %s" | cat
 }
+
+function startapp(){
+	nohup "$@" &>/dev/null & disown %
+}
+
+function compgen_ignorecase(){
+	IFS=$'\n'
+	wordlist="$1"
+	currentWord="${2#\'}"
+
+	# Display all possible completions by default
+	COMPREPLY=($wordlist)
+
+	if [ -n "$currentWord" ]; then
+		COMPREPLY=()
+
+		# Save state of nocasematch shell option
+		shCaseMatch=
+		shopt -q nocasematch || shCaseMatch=1 
+
+		# Switch nocasematch on for case-insensitive pattern matching
+		shopt -s nocasematch
+
+		# Filter on possible completions that match with the current word
+		for possibleCompletion in $wordlist
+		do
+			if [[ "$possibleCompletion" =~ ^$currentWord ]]; then
+				COMPREPLY+=("${possibleCompletion}")
+			fi
+		done
+
+		# Restore state of nocasematch
+		[ -n $shCaseMatch ] && shopt -u nocasematch
+	fi
+
+	# Quote the completions
+	let i=0
+	for completion in "${COMPREPLY[@]}"
+	do
+		COMPREPLY[$i]="${completion@Q}"
+		let i=i+1
+	done
+
+}
+
+function comp_vms(){
+	# Get list of vms using vboxmanage
+	local vmNames=$(vboxmanage list vms | awk -F '"' '{print $2}')
+
+	# Perform case-insensitive completion
+	compgen_ignorecase "$vmNames" "${COMP_WORDS[COMP_CWORD]}"
+}
+
+function vm(){
+	for machine in "$@"
+	do
+		vboxmanage startvm "$machine"&
+	done
+}
+
+complete -F comp_vms vm
