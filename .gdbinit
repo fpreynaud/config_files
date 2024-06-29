@@ -10,6 +10,7 @@ set $old_edx = 0
 set $old_esp = 0
 set $old_ebp = 0
 set $previous_eip = 0
+set disassembly-flavor intel
 
 define green-line
 	echo \033[32m
@@ -77,7 +78,7 @@ define reg
 		echo \033[31m
 		printf "eip: "
 		echo \033[0m
-		if $eip != $previous_eip
+		if $eip != (int)$previous_eip
 			echo \033[33m
 			set $previous_eip = $eip
 		end
@@ -147,6 +148,7 @@ define asm_context
 		if $old_eip1 != $eip
 			x/1i $old_eip1
 		end
+		eval "x/-%di $eip",$INSTRUCTIONS_BEFORE
 		x/10i $eip
 	end
 end
