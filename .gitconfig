@@ -1,6 +1,6 @@
 [user]
-	email = francois.p.reynaud@gmail.com
-	name = François REYNAUD
+	email = fre@example.com
+	name = FRE
 
 [credential]
 	helper = cache --timeout 7200
