@@ -15,6 +15,9 @@ set ignorecase
 "Display line numbers
 set number 
 
+"Display relative line numbers
+set relativenumber
+
 "Show partial command in status line
 set showcmd
 

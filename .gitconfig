@@ -17,7 +17,6 @@
 
 [alias]
 	logd = log --decorate=full --color=always
-	last = log -1
 	tree = log --graph --decorate --oneline --branches=* --color=always
 	diffl = diff HEAD^
 	dif = diff --color=always --ignore-space-at-eol
@@ -26,9 +25,18 @@
 	repoconf = config -l -f .git/config
 	newbranch = checkout -b
 	worddiff = diff --color-words --color=always
-	co = git checkout
 	hist = log --format=format:\"%C(yellow)commit %H %gD%nAuthor: %aN <%aE>%nDate: %aD%n%n%s%n%n%b\" -g
 	discard = reset --hard HEAD
+	a = add
+	b = branch
+	c = commit
+	ch = checkout
+	d = diff
+	l = log
+	m = mergetool
+	r = rebase
+	s = status
+	t = log --graph --decorate --oneline --branches=* --color=always
 
 [push]
 	default = matching
