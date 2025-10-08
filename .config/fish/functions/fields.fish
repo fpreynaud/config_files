@@ -16,6 +16,7 @@ function fields
 end
 
 function fields_of_line
+	# Extract fields from a line of input according to the specifications
 	set line $argv[1]
 	set field_specs $argv[2..]
 
@@ -31,6 +32,7 @@ function fields_of_line
 end
 
 function parse_field_spec
+	# Extract starting and ending field numbers from the spec
 	set line $argv[1]
 	set spec $argv[2]
 	if string match -q -- '*-*' $spec
@@ -47,6 +49,7 @@ function parse_field_spec
 end
 
 function get_field_range
+	# Extract a field range from a line of input
 	set line $argv[1]
 	set start $argv[2]
 	set end $argv[3]
