@@ -33,7 +33,7 @@ function nmap_full_port_scan
 			end
 		end
 
-		# Wait for one of the scans to finish if the job pull is full
+		# Wait for one of the scans to finish if the job pool is full
 		if test (count $pool) -ge $pool_size
 			wait -n $pool
 		end
