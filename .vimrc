@@ -1,220 +1,261 @@
-"Options"
-"""""""""
-"Make :grep act as :vimgrep
-set grepprg=internal
+"//////////////////
+"Miscellaneous"
+"//////////////////
 
-"Enable flag g by default in :substitute
-set gdefault
-
-"Highlight cursor column
-"set cursorcolumn
-
-"Ignore case in search patterns
-set ignorecase
-
-"Display line numbers
-set number 
-
-"Display relative line numbers
-set relativenumber
-
-"Show partial command in status line
-set showcmd
-
-"Enable incremental search
-"Change working directory automatically when editing a file
-"Wrap long lines at a character in 'breakat'
-set incsearch autochdir linebreak
-
-"Enable mouse
-"Make tabs 4 characters wide
-"Make indent shift 4 characters wide
-set mouse=a tabstop=4 shiftwidth=4
-
-"Copy indent from current line when starting a new line
-"No search result highlighting
-set autoindent nohlsearch
-
-"Auto-wrap text and comments using textwidth,  allow formatting of comments with "gq", Automatically insert the current comment leader after hitting 'o' or 'O' in Normal mode and <Enter> in Insert mode
-set formatoptions=tcqro
-
-"Make Vim adapt syntax highlighting for dark background
-"C indent
-"Display fold column
-"Set guicolors
-set background=dark cinoptions="" 
-set foldcolumn=2 termguicolors
-
-"Tabs are of the form [tabpagenumber: modified_flag filename |]
-"Set maximum nesting level for 'indent' and 'syntax' foldmethods
-set tabline=%!SetTabLine() foldnestmax=3
-
-"Highlighting"
-""""""""""""""
-
-"Make ColorColumn darkgrey
-highlight ColorColumn ctermbg=0
-
-"Make tab line red and white
-highlight TabLine cterm=NONE ctermfg=6 ctermbg=0
-highlight TabLineSel cterm=bold ctermfg=3 ctermbg=8
-highlight TabLineFill cterm=NONE ctermbg=0
-
-"Enable syntax highlighting
-syntax on
-
+" For nested syntax highlighting in markdown code blocks
 let g:markdown_fenced_languages = ['python', 'sh']
 
-"Miscellaneous"
-"""""""""""""""
-
-"Set <leader> for mappings
+" Set <leader> for mappings
 let mapleader = ","
 let maplocalleader = ","
 
-"Insert mode mappings"
-""""""""""""""""""""""
+"//////////////////
+" Options
+"//////////////////
+function! Set_opts() " Configure various settings
+	"Make horizontal split open below (resp. right of) current window 
+	set splitbelow splitright
 
-"Easy return to normal mode
-inoremap jk <ESC>
-inoremap JK <ESC>
+	"Make :grep act as :vimgrep
+	set grepprg=internal
 
-"Normal mode mappings"
-""""""""""""""""""""""
+	"Enable flag g by default in :substitute
+	set gdefault
 
-"Repeat last command
-"nnoremap ::: :<Up><CR>
+	"Ignore case in search patterns
+	set ignorecase
 
-"Scroll up/down and leave cursor on same line
-nnoremap <M-Up> <c-Y>gk
-nnoremap <M-Down> <C-E>gj
+	"Display line numbers
+	set number 
+	set relativenumber
 
-"Modify windows height and width
-nnoremap <F2> <C-W>=
-nnoremap <F3> :resize<CR>:vertical resize<CR>
+	"Show partial command in status line
+	set showcmd
 
-"Delete whole line
-nnoremap DD $d^d$
+	"Enable incremental search
+	"Change working directory automatically when editing a file
+	"Wrap long lines at a character in 'breakat'
+	set incsearch autochdir linebreak
 
-"Open all folds
-nnoremap zO zR
+	"Enable mouse
+	"Make tabs 4 characters wide
+	"Make indent shift 4 characters wide
+	set mouse=a tabstop=4 shiftwidth=4
 
-"Open all folds under cursor recursively
-nnoremap zR zO
+	"Copy indent from current line when starting a new line
+	"No search result highlighting
+	set autoindent nohlsearch
 
-"Close all folds
-nnoremap zC zM
+	"Auto-wrap text and comments using textwidth,  allow formatting of comments with "gq", Automatically insert the current comment leader after hitting 'o' or 'O' in Normal mode and <Enter> in Insert mode
+	set formatoptions=tcqro
 
-"Close all folds under cursor recursively
-nnoremap zM zC
+	"Make Vim adapt syntax highlighting for dark background
+	"C indent
+	"Display fold column
+	set background=dark cinoptions="" 
+	set foldcolumn=2
 
-"Shortcut for helpgrep
-nnoremap :hg :helpgrep
+	"Tabs are of the form [tabpagenumber: modified_flag filename |]
+	"Set maximum nesting level for 'indent' and 'syntax' foldmethods
+	set tabline=%!SetTabLine() foldnestmax=3
 
-"d<character> = delete until caracter (excluded)
-nnoremap d; dt;
-nnoremap d. dt.
-nnoremap d, dt,
-nnoremap d" dt"
+	" Enable current line highlighting
+	" Highlight whole line when wrapped, but not line number
+	set cursorline cursorlineopt=line
+endfunction
 
-"Save instead of save and quit
-nnoremap :x<CR> :w<CR>
+"//////////////////
+" Highlighting
+"//////////////////
 
-"Alias for :w
-nnoremap :W<CR> :w<CR>
+function! Set_highlighting() " Cosmetics
+	"Enable syntax highlighting
+	syntax on
 
-"move across windows
-nnoremap <C-h> :wincmd h<CR>
-nnoremap <C-l> :wincmd l<CR>
-nnoremap <C-k> :wincmd k<CR>
-nnoremap <C-j> :wincmd j<CR>
+	" Use 'torte' colorscheme
+	colorscheme torte
 
-"Convenient fold until matching bracket/parenthesis
-nnoremap zff zf%
+	"Make ColorColumn darkgrey
+	highlight ColorColumn ctermbg=0
 
-"Up down motion in wrapped lines
-nnoremap j gj
-nnoremap k gk
+	"Make tab line red and white
+	highlight TabLine cterm=NONE ctermfg=6 ctermbg=0
+	highlight TabLineSel cterm=bold ctermfg=3 ctermbg=8
+	highlight TabLineFill cterm=NONE ctermbg=0
 
-"Move current line up or down
-nnoremap - :m .-2<CR>
-nnoremap + :m .+1<CR>
+	"Highlight cursor line. This MUST be done after :syntax on
+	highlight CursorLine ctermbg=235 cterm=NONE
+endfunction
 
-"Move to previous or next tab page
-nnoremap <M-Left> gT
-nnoremap <M-Right> gt
+"//////////////////
+" Mappings
+"//////////////////
 
-"Edit and load vim configuration
-nnoremap <leader>ev :vsp $MYVIMRC<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
+function! Set_autocomplete() " Get some as-you-type completion
+	inoremap a a<C-N><C-P>
+	inoremap b b<C-N><C-P>
+	inoremap c c<C-N><C-P>
+	inoremap d d<C-N><C-P>
+	inoremap e e<C-N><C-P>
+	inoremap f f<C-N><C-P>
+	inoremap g g<C-N><C-P>
+	inoremap h h<C-N><C-P>
+	inoremap i i<C-N><C-P>
+	inoremap j j<C-N><C-P>
+	inoremap k k<C-N><C-P>
+	inoremap l l<C-N><C-P>
+	inoremap m m<C-N><C-P>
+	inoremap n n<C-N><C-P>
+	inoremap o o<C-N><C-P>
+	inoremap p p<C-N><C-P>
+	inoremap q q<C-N><C-P>
+	inoremap r r<C-N><C-P>
+	inoremap s s<C-N><C-P>
+	inoremap t t<C-N><C-P>
+	inoremap u u<C-N><C-P>
+	inoremap v v<C-N><C-P>
+	inoremap w w<C-N><C-P>
+	inoremap x x<C-N><C-P>
+	inoremap y y<C-N><C-P>
+	inoremap z z<C-N><C-P>
+endfunction
 
-"Edit and load abbreviations file
-nnoremap <leader>abb :vsp ~/.vim/abbr.vim<CR>
-nnoremap <leader>labb :source ~/.vim/abbr.vim<CR>
+function! Set_mappings() " Define key mappings
+	"Insert mode mappings"
+	""""""""""""""""""""""
 
-"Commenting
-"C line comment
-nnoremap <leader>:: I//<ESC>j
-"Latex comment
-nnoremap <leader>ù I%<ESC>j
-"Vim comment
-nnoremap <leader>" I"<ESC>j
-"Bash comment
-nnoremap <leader># I#<ESC>j
+	"Easy return to normal mode
+	inoremap jk <ESC>
+	inoremap JK <ESC>
 
-"<CR> inserts newline in normal mode
-"nnoremap <CR> o<ESC>
+	"Normal mode mappings"
+	""""""""""""""""""""""
 
-"Adapt QWERTY commands for AZERTY keyboards
-nnoremap à 0
-nnoremap é ~
-nnoremap ; .
-nnoremap ! ;
-nnoremap ù %
+	"Make CTRL-G show full path and buffer number
+	nnoremap <C-G> 2<C-G>
 
-"Visual mode mappings"
-"""""""""""""""""""""
+	"Scroll up/down and leave cursor on same line
+	nnoremap <M-Up> <c-Y>gk
+	nnoremap <M-Down> <C-E>gj
 
-"Move selected lines up or down.
-vnoremap + :m '>+1<CR>'<V'>
-vnoremap - :m '<-2<CR>'<V'>
+	"Modify windows height and width
+	nnoremap <F2> <C-W>=
+	nnoremap <F3> :resize<CR>:vertical resize<CR>
 
-"Autocommands"
-""""""""""""""
+	"Delete whole line
+	nnoremap DD 0d$
 
-"Call Maps_tex when editing .tex files (TODO: make it local to buffer)
-autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.tex :call Maps_tex()
+	"Open all folds
+	nnoremap zO zR
 
-"Use Markdown syntax highlighting for .md files
-autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.md :set syntax=markdown
-"Use Java syntax highlighting for .pde files
-autocmd Bufnewfile,bufread *.pde :set syn=java
-"Use Prolog syntax highlighting for .P files
-autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.P :source $VIMRUNTIME/syntax/prolog.vim
-"Use fish syntax highlighting for .fish files
-autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.fish :set syntax=fish
+	"Open all folds under cursor recursively
+	nnoremap zR zO
 
-"Autocommands common to C and C++
-"Enable cindent
-autocmd Bufnewfile,bufreadpre,bufread,bufreadpost {*.c,*.cpp} :set cindent
-"Don't break text using textwidth
-autocmd FileType {c,cpp} :set formatoptions=cqro
-"Color Column 79
-autocmd FileType {c,cpp} :set cc=79
-"set foldmethod to 'syntax'
-"autocmd FileType {c,cpp} :set foldmethod=syntax
+	"Close all folds
+	nnoremap zC zM
 
-"C-specific autocommands
-"Write minimal C code
-"autocmd Bufnewfile *.c :0r ~/.vim/minC.c
+	"Close all folds under cursor recursively
+	nnoremap zM zC
 
-"C++-specific autocommands
-"Write minimal C++ code
-"autocmd Bufnewfile *.cpp :0r ~/.vim/minCpp.cpp
+	"Shortcut for helpgrep
+	nnoremap :hg :helpgrep
 
+	"Save instead of save and quit
+	nnoremap :x<CR> :w<CR>
 
-"Defines mappings for .tex documents
-function! Maps_tex ()
+	"Alias for :w
+	nnoremap :W<CR> :w<CR>
+
+	"move across windows
+	nnoremap <C-h> :wincmd h<CR>
+	nnoremap <C-l> :wincmd l<CR>
+	nnoremap <C-k> :wincmd k<CR>
+	nnoremap <C-j> :wincmd j<CR>
+
+	"Convenient fold until matching bracket/parenthesis
+	nnoremap zff zf%
+
+	"Up down motion in wrapped lines
+	nnoremap j gj
+	nnoremap k gk
+	nnoremap gj j
+	nnoremap gk k
+
+	"Move current line up or down
+	nnoremap - :m .-2<CR>
+	nnoremap + :m .+1<CR>
+
+	"Move to previous or next tab page
+	nnoremap <M-Left> gT
+	nnoremap <M-Right> gt
+
+	"Edit and load vim configuration
+	nnoremap <leader>ev :vsp $MYVIMRC<CR>
+	nnoremap <leader>sv :source $MYVIMRC<CR>
+
+	"Edit and load abbreviations file
+	nnoremap <leader>abb :vsp ~/.vim/abbr.vim<CR>
+	nnoremap <leader>labb :source ~/.vim/abbr.vim<CR>
+
+	"Adapt QWERTY commands for AZERTY keyboards
+	nnoremap à 0
+	nnoremap é ~
+	nnoremap ; .
+	nnoremap . ;
+	nnoremap ù %
+
+	"Enclose Word between quotes/brackets
+	nnoremap <leader>" ciW""<ESC>P
+	nnoremap <leader>' ciW''<ESC>P
+	nnoremap <leader>( ciW()<ESC>P
+	nnoremap <leader>) ciW()<ESC>P
+	nnoremap <leader>[ ciW[]<ESC>P
+	nnoremap <leader>] ciW[]<ESC>P
+
+	"Visual mode mappings"
+	"""""""""""""""""""""
+
+	"Move selected lines up or down.
+	vnoremap + :m '>+1<CR>'<V'>
+	vnoremap - :m '<-2<CR>'<V'>
+
+	"Enclose selection in quotes/brackets
+	vnoremap <leader>" <ESC>`>a"<ESC>`<i"<ESC>
+	vnoremap <leader>' <ESC>`>a'<ESC>`<i'<ESC>
+	vnoremap <leader>( <ESC>`>a)<ESC>`<i(<ESC>
+	vnoremap <leader>) <ESC>`>a)<ESC>`<i(<ESC>
+	vnoremap <leader>[ <ESC>`>a]<ESC>`<i[<ESC>
+	vnoremap <leader>] <ESC>`>a]<ESC>`<i[<ESC>
+	")]
+endfunction
+
+"//////////////////
+" Filetype actions
+"//////////////////
+function! Set_FtActions() " Do specific actions depending on file type
+	"Call Maps_tex when editing .tex files (TODO: make it local to buffer)
+	autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.tex :call Maps_tex()
+
+	"Syntax highlighting
+	"i3 config files
+	autocmd Bufnewfile,bufreadpre,bufread,bufreadpost */i3/config :set syntax=i3config
+	".md files
+	autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.md :set syntax=markdown
+	".pde files
+	autocmd Bufnewfile,bufread *.pde :set syn=java
+	".P files
+	autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.P :source $VIMRUNTIME/syntax/prolog.vim
+	".fish files
+	autocmd Bufnewfile,bufreadpre,bufread,bufreadpost *.fish :set syntax=fish
+
+	"Autocommands common to C and C++
+	"Enable cindent
+	autocmd Bufnewfile,bufreadpre,bufread,bufreadpost {*.c,*.cpp} :set cindent
+	"Don't break text using textwidth
+	autocmd FileType {c,cpp} :set formatoptions=cqro
+endfunction
+
+function! Maps_tex () "Defines mappings for .tex documents
     if &ft != 'tex' && &ft != 'plaintex'
         return
     endif
@@ -306,8 +347,66 @@ function! MyTabLabel(n)
     return label
 endfunction
 
+function! NextColorScheme()
+	""" Cycle through colorschemes
+
+	let rpath_list = split(&runtimepath, ',', 1)
+	let runtime_folder = v:none
+	let available_schemes = []
+	let current_scheme = execute('colorscheme')[1:]
+	let color_files = v:none
+	let current_options = execute('set')
+	let current_options = split(current_options, '\n')[1:]
+
+	" Find folder read by :colorscheme
+	for path in rpath_list
+		if isdirectory(path . '/colors')
+			let runtime_folder = path
+			break
+		end
+	endfor
+
+	" Stop if folder is not found
+	if runtime_folder == v:none
+		return
+	endif
+	
+	" Get the list of color scheme files
+	let color_files = glob(runtime_folder . '/colors/*.vim')
+	let color_files = split(color_files, '\n')
+
+	" Store names of color schemes in a list
+	for color_file in color_files
+		let output = system('basename ' . color_file)
+		let output = split(output, '\.')[0]
+		call add(available_schemes, output)
+	endfor
+
+	" Apply next color scheme
+	let idx = index(available_schemes, current_scheme)
+	if exists('g:next_index')
+		let g:next_index = (g:next_index + 1) % len(available_schemes)
+	else
+		let g:next_index = (idx + 1) % len(available_schemes)
+	endif
+	exec 'colorscheme ' . available_schemes[g:next_index]
+
+	call Set_opts()
+	call Set_highlighting()
+
+	" Display name of newly applied colorscheme
+	redraw! " Necessary for the subsequent echo to display something
+	echo available_schemes[g:next_index]
+endfunction
+
 " User-defined commands "
 """""""""""""""""""""""""
 
 command! Changeindentstyle set expandtab! smarttab!|retab
 command! -nargs=? -complete=buffer Vsb vert sb <args>
+
+call Set_opts()
+call Set_highlighting()
+call Set_mappings()
+call Set_autocomplete()
+call Set_FtActions()
