@@ -1,5 +1,5 @@
 "//////////////////
-"Miscellaneous"
+"{{{1 Miscellaneous"
 "//////////////////
 
 " For nested syntax highlighting in markdown code blocks
@@ -9,8 +9,10 @@ let g:markdown_fenced_languages = ['python', 'sh']
 let mapleader = ","
 let maplocalleader = ","
 
+let g:netrw_bufsettings = 'noma nomod nu rel nobl nowrap ro'
+
 "//////////////////
-" Options
+"{{{1 Options
 "//////////////////
 function! Set_opts() " Configure various settings
 	"Make horizontal split open below (resp. right of) current window 
@@ -23,7 +25,8 @@ function! Set_opts() " Configure various settings
 	set gdefault
 
 	"Ignore case in search patterns
-	set ignorecase
+	"Enable smartcase (don't ignore case if the search is mixed case)
+	set ignorecase smartcase
 
 	"Display line numbers
 	set number 
@@ -65,7 +68,7 @@ function! Set_opts() " Configure various settings
 endfunction
 
 "//////////////////
-" Highlighting
+"{{{1 Highlighting
 "//////////////////
 
 function! Set_highlighting() " Cosmetics
@@ -75,20 +78,34 @@ function! Set_highlighting() " Cosmetics
 	" Use 'torte' colorscheme
 	colorscheme torte
 
+	" Enable 24-bit colors if possible
+	if has("termguicolors")
+		set termguicolors
+	endif
+
 	"Make ColorColumn darkgrey
 	highlight ColorColumn ctermbg=0
-
+highlight ColorColumn ctermbg=0
 	"Make tab line red and white
-	highlight TabLine cterm=NONE ctermfg=6 ctermbg=0
-	highlight TabLineSel cterm=bold ctermfg=3 ctermbg=8
+	highlight TabLine cterm=NONE ctermfg=6 ctermbg=0 guifg=black guibg=white
+	highlight TabLineSel cterm=bold ctermfg=3 ctermbg=8 guifg=white guibg=blue
 	highlight TabLineFill cterm=NONE ctermbg=0
 
 	"Highlight cursor line. This MUST be done after :syntax on
-	highlight CursorLine ctermbg=235 cterm=NONE
+	highlight CursorLine ctermbg=235 cterm=NONE guibg=#452000
+
+	" Insert mode completion menu 
+	highlight Pmenu ctermfg=0 ctermbg=208 guibg=#F05000 guifg=Black
+	highlight PmenuSel ctermfg=214 ctermbg=235 guibg=Black guifg=#F05000
+
+	highlight Normal guibg=#250000
+
+	highlight! link Folded StatusLine
+	highlight! link FoldColumn StatusLine
 endfunction
 
 "//////////////////
-" Mappings
+"{{{1 Mappings
 "//////////////////
 
 function! Set_autocomplete() " Get some as-you-type completion
@@ -230,7 +247,7 @@ function! Set_mappings() " Define key mappings
 endfunction
 
 "//////////////////
-" Filetype actions
+"{{{1 Filetype actions
 "//////////////////
 function! Set_FtActions() " Do specific actions depending on file type
 	"Call Maps_tex when editing .tex files (TODO: make it local to buffer)
@@ -267,7 +284,7 @@ function! Maps_tex () "Defines mappings for .tex documents
 
     "En-tête
     inoreabbr <buffer> usepackages \documentclass[a4paper]{article}<CR>\usepackage[utf8]{inputenc}<CR>\usepackage[T1]{fontenc}<CR>\%\usepackage[francais]{babel}<CR>%\usepackage[left=1cm, bottom=1cm, top=0.5cm, right=1cm]{geometry}<CR>\usepackage{color}<CR>%\usepackage{graphicx}
-    inoreabb <buffer> colortitles \definecolor{turquoise}{rgb}{.17,.97,.7}<CR> \definecolor{vert}{rgb}{.17,.97,.34}<CR> \newcommand{\cpart}[1]{\part{\textcolor{blue}{#1}}}<CR> \newcommand{\csection}[1]{\section{\textcolor{turquoise}{#1}}}<CR> \newcommand{\csubsection}[1]{\subsection{\textcolor{vert}{#1}}}
+    inoreabb <buffer> colortitles \definecolor{turquoise}{rgb}{.17,.97,.7}<CR> \definecolor{vert}{rgb}{.17,.97,.34}<CR> \newcommand{\cpart}[1]{\part{\textcolor{blue}{#1}} }<CR> \newcommand{\csection}[1]{\section{\textcolor{turquoise}{#1}} }<CR> \newcommand{\csubsection}[1]{\subsection{\textcolor{vert}{#1}} }
 
     "Sections & paragraphs mappings
     inoremap <buffer> <leader>cpart \cpart{}<Left>
@@ -303,38 +320,49 @@ function! Maps_tex () "Defines mappings for .tex documents
     nnoremap <buffer> <C-C> :!make<CR>
 endfunction
 
+"//////////////////
+"{{{1 Tab line
+"//////////////////
 "Customizes the way information is displayed in tab line
+"The current tab is always displayed last, so that it is always visible
 function! SetTabLine()
     let s = ''
+	let current_tab_s = ''
 
-    "Loop accross all tabs
-    for i in range(tabpagenr('$'))
-        let tabpage = i + 1
-        "If the tabpage is the current tabpage use highlight
-        "group for selected tab
-        if tabpage == tabpagenr()
-            let s .= '%#TabLineSel#'
-        "If the tabpage is not the current tabpage use
-        "highlight group for unselected tab
-        else
-            let s .= '%#TabLine#'
-        endif
+	"Loop accross all tabs
+	for i in range(tabpagenr('$'))
+		let tabpage = i + 1
+		let tab_string = ''
+		let hl = '%#TabLine#'
 
-        let s .= '%' . tabpage . 'T'
+		"If the tabpage is the current tabpage use highlight group for
+		"selected tab
+		if tabpage == tabpagenr()
+			let hl = '%#TabLineSel#'
+		endif
+		let tab_string .= hl
+		let tab_string .= '%' . tabpage . 'T'
 
-    " the label is made by MyTabLabel()
-    let s .= '[' . tabpage . ': %{MyTabLabel(' . tabpage . ')} ]'
-      endfor
+		" the label is made by MyTabLabel()
+		let tab_string .= '[' . tabpage . ': %{MyTabLabel(' . tabpage . ')} ]'
 
-      " after the last tab fill with TabLineFill and reset tab page nr
-      let s .= '%#TabLineFill#%T'
+		if tabpage == tabpagenr()
+			let current_tab_s .= tab_string
+		else
+			let s .= tab_string
+		endif
+	endfor
+	let s .= current_tab_s
 
-      " right-align the label to close the current tab page
-      if tabpagenr('$') > 1
-        let s .= '%=%#TabLine#%999XX'
-      endif
+	" after the last tab fill with TabLineFill and reset tab page nr
+	let s .= '%#TabLineFill#%T'
 
-      return s
+	" right-align the label to close the current tab page
+	if tabpagenr('$') > 1
+		let s .= '%=%#TabLine#%999XX'
+	endif
+
+	return s
 endfunction
 
 function! MyTabLabel(n)
@@ -345,6 +373,26 @@ function! MyTabLabel(n)
         let label = '[+]' . label
     endif
     return label
+endfunction
+
+function! CloseOtherTabs()
+	for i in range(tabpagenr('$'))
+		if i+1 == tabpagenr()
+			continue
+		endif
+		execute('tabclose ' . i)
+	endfor
+endfunction
+
+"//////////////////
+"{{{1 Custom functions
+"//////////////////
+function! Tee(target, command, ...)
+	let s = a:command
+	let output = execute(a:command)
+	let output = split(output, '\n')
+	call writefile(output, a:target)
+	call execute("tabe " . a:target)
 endfunction
 
 function! NextColorScheme()
@@ -399,8 +447,9 @@ function! NextColorScheme()
 	echo available_schemes[g:next_index]
 endfunction
 
-" User-defined commands "
-"""""""""""""""""""""""""
+"//////////////////
+"{{{1 User-defined commands
+"//////////////////
 
 command! Changeindentstyle set expandtab! smarttab!|retab
 command! -nargs=? -complete=buffer Vsb vert sb <args>
