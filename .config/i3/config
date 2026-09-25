@@ -191,7 +191,7 @@ focus_follows_mouse no
 		bindsym $win+minus workspace number $ws6
 		bindsym $win+egrave workspace number $ws7
 		bindsym $win+underscore workspace number $ws8
-		bindsym $win+cc4edilla workspace number $ws9
+		bindsym $win+ccedilla workspace number $ws9
 		bindsym $win+agrave workspace number $ws10
 
 		# move focused container to workspace
@@ -336,7 +336,7 @@ focus_follows_mouse no
 		bindsym $win+minus workspace number $ws6
 		bindsym $win+egrave workspace number $ws7
 		bindsym $win+underscore workspace number $ws8
-		bindsym $win+cc4edilla workspace number $ws9
+		bindsym $win+ccedilla workspace number $ws9
 		bindsym $win+agrave workspace number $ws10
 
 		bindsym h move workspace to output left
