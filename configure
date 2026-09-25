@@ -8,7 +8,7 @@ for i in `ls -d $WD/* $WD/.*`; do
 		.|..|"$self"|.git);;
 		*)	read -p "Copy $i ?" answer;
 			case $answer in
-				y|Y|yes|Yes)	cp -lf $i ~/;;
+				y|Y|yes|Yes)	cp -rlf $i ~/;;
 				*)	continue;;
 			esac
 	esac
